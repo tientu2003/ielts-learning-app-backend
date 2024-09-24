@@ -5,11 +5,14 @@
       <directory url="file://$PROJECT_DIR$/src/main/resources/archetype-resources" includeSubdirectories="true" />
     </excludeFromCompile>
     <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="App" />
+        <module name="eurekaserver" />
+        <module name="AccountService" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -18,9 +21,11 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="AccountService" options="-parameters" />
       <module name="AccoutService" options="-parameters" />
       <module name="App" options="-parameters" />
       <module name="chat" options="" />
+      <module name="eurekaserver" options="-parameters" />
     </option>
   </component>
 </project>
