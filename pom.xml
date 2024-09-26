@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
@@ -6,14 +5,14 @@
   <artifactId>chat</artifactId>
   <version>1.0</version>
 
+  <packaging>pom</packaging>
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
     <version>3.3.3</version>
-    <relativePath/> <!-- lookup parent from repository -->
   </parent>
 
-  <packaging>pom</packaging>
+
   <properties>
     <java.version>22</java.version>
     <spring-cloud.version>2023.0.3</spring-cloud.version>
@@ -71,18 +70,27 @@
   </dependencyManagement>
 
   <build>
+    <resources>
+      <resource>
+        <directory>${project.basedir}/src/main/resources</directory>
+        <includes>
+          <include>**/*</include>
+        </includes>
+      </resource>
+    </resources>
     <plugins>
       <plugin>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-maven-plugin</artifactId>
+        <!-- Set Java version -->
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <excludes>
-            <exclude>
-              <groupId>org.projectlombok</groupId>
-              <artifactId>lombok</artifactId>
-            </exclude>
-          </excludes>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
       </plugin>
     </plugins>
   </build>
@@ -90,6 +98,7 @@
   <modules>
     <module>EurekaServer</module>
     <module>AccountService</module>
-<!--    <module>App</module>-->
+    <module>GateWay</module>
+    <!--    <module>App</module>-->
   </modules>
 </project>

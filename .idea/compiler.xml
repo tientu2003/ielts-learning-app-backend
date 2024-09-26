@@ -13,6 +13,7 @@
         <module name="App" />
         <module name="eurekaserver" />
         <module name="AccountService" />
+        <module name="GateWay" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -24,7 +25,8 @@
       <module name="AccountService" options="-parameters" />
       <module name="AccoutService" options="-parameters" />
       <module name="App" options="-parameters" />
-      <module name="chat" options="" />
+      <module name="GateWay" options="-parameters" />
+      <module name="chat" options="-parameters" />
       <module name="eurekaserver" options="-parameters" />
     </option>
   </component>
