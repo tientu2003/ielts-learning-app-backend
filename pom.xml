@@ -81,8 +81,8 @@
   </build>
 
   <modules>
-    <module>App</module>
     <module>EurekaServer</module>
     <module>AccountService</module>
+<!--    <module>App</module>-->
   </modules>
 </project>
