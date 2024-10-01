@@ -10,24 +10,28 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="App" />
-        <module name="eurekaserver" />
-        <module name="AccountService" />
-        <module name="GateWay" />
+        <module name="gate-way" />
+        <module name="account-service" />
+        <module name="eureka-server" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="AccoutService" target="22" />
+      <module name="App" target="22" />
+      <module name="GateWay" target="22" />
+      <module name="Resilience4JCircuitBreakers" target="22" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="AccountService" options="-parameters" />
       <module name="AccoutService" options="-parameters" />
       <module name="App" options="-parameters" />
       <module name="GateWay" options="-parameters" />
-      <module name="chat" options="-parameters" />
-      <module name="eurekaserver" options="-parameters" />
+      <module name="Resilience4JCircuitBreakers" options="-parameters" />
+      <module name="account-service" options="-parameters" />
+      <module name="eureka-server" options="-parameters" />
+      <module name="gate-way" options="-parameters" />
+      <module name="ielts-learning" options="-parameters" />
     </option>
   </component>
 </project>

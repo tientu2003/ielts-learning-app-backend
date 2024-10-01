@@ -2,7 +2,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.project</groupId>
-  <artifactId>chat</artifactId>
+  <artifactId>ielts-learning</artifactId>
   <version>1.0</version>
 
   <packaging>pom</packaging>
@@ -96,9 +96,8 @@
   </build>
 
   <modules>
-    <module>EurekaServer</module>
-    <module>AccountService</module>
-    <module>GateWay</module>
-    <!--    <module>App</module>-->
+    <module>eureka-server</module>
+    <module>account-service</module>
+    <module>gate-way</module>
   </modules>
 </project>
