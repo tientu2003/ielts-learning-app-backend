@@ -99,5 +99,6 @@
     <module>eureka-server</module>
     <module>account-service</module>
     <module>gate-way</module>
+    <module>reading-service</module>
   </modules>
 </project>

@@ -1,13 +1,13 @@
-package com.project.gateway;
+package com.project.readingservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class GateWayApplication {
+public class ReadingServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(GateWayApplication.class, args);
+        SpringApplication.run(ReadingServiceApplication.class, args);
     }
 
 }
