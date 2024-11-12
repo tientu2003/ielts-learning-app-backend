@@ -1,5 +1,6 @@
 package com.project.readingservice.internal;
 
+import com.project.readingservice.external.ReadingTestAlreadyExistsException;
 import com.project.readingservice.external.*;
 import com.project.readingservice.CRUDReadingService;
 import com.project.readingservice.internal.model.*;
@@ -7,10 +8,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Service
 @Log4j2
@@ -48,16 +46,25 @@ public class MongoReadingServiceImp implements CRUDReadingService {
     }
 
     @Override
-    public ReadingTestData createNewReadingTest(NewReadingTest newReadingTest) {
+    public ReadingTestData createNewReadingTest(NewReadingTest newReadingTest) throws ReadingTestAlreadyExistsException {
+
+        ReadingTestData readingTestData = getReadingTestData(newReadingTest.getName());
+
+        if(readingTestData != null){
+            throw new ReadingTestAlreadyExistsException( "A test with the name '" + newReadingTest.getName() + "' already exists.");
+        }
 
         readingTestRepository.save(new MongoReadingTest(newReadingTest));
 
         List<MongoReadingTest> mongoReadingTests = readingTestRepository.findByTestName(newReadingTest.getName());
+
         if(mongoReadingTests.isEmpty()){
             return null;
         }
+
         return mongoReadingTests.getFirst().toReadingTestData();
     }
+
 
     @Override
     public void deleteReadingTest(String id) {

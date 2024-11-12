@@ -2,6 +2,7 @@ package com.project.readingservice;
 
 import com.project.readingservice.external.AnswerData;
 import com.project.readingservice.external.NewReadingTest;
+import com.project.readingservice.external.ReadingTestAlreadyExistsException;
 import com.project.readingservice.external.ReadingTestData;
 
 import java.util.List;
@@ -14,7 +15,7 @@ public interface CRUDReadingService {
 
     ReadingTestData getReadingTestData(String testName);
 
-    ReadingTestData createNewReadingTest(NewReadingTest newReadingTest);
+    ReadingTestData createNewReadingTest(NewReadingTest newReadingTest) throws ReadingTestAlreadyExistsException;
 
     void deleteReadingTest(String id);
 }

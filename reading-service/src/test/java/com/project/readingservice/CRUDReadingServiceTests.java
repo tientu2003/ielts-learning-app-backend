@@ -175,7 +175,7 @@ public class CRUDReadingServiceTests {
                 .build();
 
 
-        ReadingTestData receivedReadingTestData = crudReadingService.createNewReadingTest(newReadingTest);
+        ReadingTestData receivedReadingTestData = crudReadingService.Activity and Fragment LifecycreateNewReadingTest(newReadingTest);
 
         assertNotNull(receivedReadingTestData);
 

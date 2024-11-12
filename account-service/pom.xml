@@ -9,7 +9,6 @@
     </parent>
     <artifactId>account-service</artifactId>
     <version>0.1</version>
-    <name>AccountService</name>
 
     <dependencies>
 
