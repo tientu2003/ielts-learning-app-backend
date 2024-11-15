@@ -21,11 +21,6 @@ public class ReadingServiceApi {
         this.crudReadingService = crudReadingService;
     }
 
-    @GetMapping("/list")
-    public ResponseEntity<List<String>> getAllReadingTests(){
-        return ResponseEntity.ok(crudReadingService.listAllReadingTestName());
-    }
-
     @GetMapping("/answer/{id}")
     public ResponseEntity<AnswerData> getAnswer(@PathVariable("id") String id){
         AnswerData answerData = crudReadingService.getAnswerTest(id);
