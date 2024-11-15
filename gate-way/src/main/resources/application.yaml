@@ -1,0 +1,35 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: gate-way
+  cloud:
+    gateway:
+      mvc:
+        routes:
+          - id: publicReadingServiceRoute
+            predicates:
+              - Path=/public/api/reading/**
+            uri:
+              lb://READING-SERVICE
+
+          - id: readingServiceRoute
+            predicates:
+              - Path=/api/reading/**
+            uri:
+              lb://READING-SERVICE
+            filters:
+              TokenRelay=
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:8081/realms/ielts-spring-microservices/protocol/openid-connect/certs
+
+# Logging config
+logging:
+  pattern:
+    dateformat: 'YY-MM-dd HH:MM:SS'
+    console: '%clr(%5p) %clr(${PID:- }){magenta} %clr([%t] %-40.40logger{39}){cyan} : %msg%n'

@@ -16,11 +16,5 @@ public interface   ReadingTestRepository extends MongoRepository<MongoReadingTes
 
     List<MongoReadingTest> findByTestName(String testName);
 
-    @Aggregation(pipeline = {
-            "{ $unwind: '$passages' }",
-            "{ $project: { articleTitle: '$passages.article_title', _id: 0 } }"
-    })
-    List<String> findPassagesArticleTitle();
-
 
 }
