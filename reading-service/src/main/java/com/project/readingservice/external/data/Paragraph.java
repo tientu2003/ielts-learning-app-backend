@@ -1,8 +1,7 @@
-package com.project.readingservice.external;
+package com.project.readingservice.external.data;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 @Builder

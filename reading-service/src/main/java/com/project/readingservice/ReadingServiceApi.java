@@ -1,16 +1,17 @@
 package com.project.readingservice;
 
-import com.project.readingservice.external.AnswerData;
-import com.project.readingservice.external.NewReadingTest;
-import com.project.readingservice.external.ReadingTestAlreadyExistsException;
-import com.project.readingservice.external.ReadingTestData;
+import com.project.readingservice.external.data.AnswerData;
+import com.project.readingservice.external.data.NewReadingTest;
+import com.project.readingservice.external.data.ReadingTestAlreadyExistsException;
+import com.project.readingservice.external.data.ReadingTestData;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/reading")
 public class ReadingServiceApi {
@@ -23,6 +24,7 @@ public class ReadingServiceApi {
 
     @GetMapping("/answer/{id}")
     public ResponseEntity<AnswerData> getAnswer(@PathVariable("id") String id){
+        log.info(id);
         AnswerData answerData = crudReadingService.getAnswerTest(id);
         if(answerData == null){
             return ResponseEntity.notFound().build();
@@ -30,8 +32,8 @@ public class ReadingServiceApi {
         return ResponseEntity.ok(answerData);
     }
 
-    @GetMapping("/data/{test-name}")
-    public ResponseEntity<ReadingTestData> getTestData(@PathVariable("test-name") String testName){
+    @GetMapping("/data")
+    public ResponseEntity<ReadingTestData> getTestData(@RequestBody String testName){
         ReadingTestData readingTestData = crudReadingService.getReadingTestData(testName);
         if(readingTestData == null){
             return ResponseEntity.notFound().build();

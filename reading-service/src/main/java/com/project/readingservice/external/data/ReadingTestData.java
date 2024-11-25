@@ -1,4 +1,4 @@
-package com.project.readingservice.external;
+package com.project.readingservice.external.data;
 
 import lombok.*;
 

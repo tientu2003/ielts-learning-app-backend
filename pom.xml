@@ -100,5 +100,6 @@
     <module>account-service</module>
     <module>gate-way</module>
     <module>reading-service</module>
+    <module>cloud-config-server</module>
   </modules>
 </project>

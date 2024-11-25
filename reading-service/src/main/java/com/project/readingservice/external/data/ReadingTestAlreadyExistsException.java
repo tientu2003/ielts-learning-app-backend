@@ -1,4 +1,4 @@
-package com.project.readingservice.external;
+package com.project.readingservice.external.data;
 
 import lombok.extern.slf4j.Slf4j;
 

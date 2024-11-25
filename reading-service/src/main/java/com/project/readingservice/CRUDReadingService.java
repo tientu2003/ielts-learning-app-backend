@@ -1,9 +1,10 @@
 package com.project.readingservice;
 
-import com.project.readingservice.external.AnswerData;
-import com.project.readingservice.external.NewReadingTest;
-import com.project.readingservice.external.ReadingTestAlreadyExistsException;
-import com.project.readingservice.external.ReadingTestData;
+import com.project.readingservice.external.data.AnswerData;
+import com.project.readingservice.external.data.NewReadingTest;
+import com.project.readingservice.external.data.ReadingTestAlreadyExistsException;
+import com.project.readingservice.external.data.ReadingTestData;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
-package com.project.readingservice.internal.model;
+package com.project.readingservice.internal.model.data;
 
-import com.project.readingservice.external.QuestionGroup;
-import com.project.readingservice.external.ReadingTestType;
+import com.project.readingservice.external.data.QuestionGroup;
+import com.project.readingservice.external.data.ReadingTestType;
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Field;
 

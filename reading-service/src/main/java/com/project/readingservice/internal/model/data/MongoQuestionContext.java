@@ -1,4 +1,4 @@
-package com.project.readingservice.internal.model;
+package com.project.readingservice.internal.model.data;
 
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Field;
