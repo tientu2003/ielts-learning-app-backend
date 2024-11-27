@@ -13,13 +13,13 @@
         <module name="gate-way" />
         <module name="reading-service" />
         <module name="account-service" />
-        <module name="cloud-config-server" />
         <module name="eureka-server" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="AccoutService" target="22" />
       <module name="App" target="22" />
+      <module name="cloud-config-server" target="21" />
       <module name="GateWay" target="22" />
       <module name="Resilience4JCircuitBreakers" target="22" />
     </bytecodeTargetLevel>

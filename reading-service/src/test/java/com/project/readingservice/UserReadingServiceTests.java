@@ -4,7 +4,6 @@ import com.project.readingservice.external.user.BasicReadingHistory;
 import com.project.readingservice.external.user.DetailReadingTestRecord;
 import com.project.readingservice.external.user.GeneralAssessment;
 import com.project.readingservice.external.user.UserAnswer;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

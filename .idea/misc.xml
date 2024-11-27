@@ -20,6 +20,7 @@
       <set>
         <option value="$PROJECT_DIR$/GateWay/pom.xml" />
         <option value="$PROJECT_DIR$/Resilience4JCircuitBreakers/pom.xml" />
+        <option value="$PROJECT_DIR$/cloud-config-server/pom.xml" />
       </set>
     </option>
   </component>

@@ -4,7 +4,6 @@ import com.project.readingservice.external.user.BasicReadingHistory;
 import com.project.readingservice.external.user.DetailReadingTestRecord;
 import com.project.readingservice.external.user.GeneralAssessment;
 import com.project.readingservice.external.user.UserAnswer;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
