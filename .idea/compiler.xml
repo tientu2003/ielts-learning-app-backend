@@ -11,6 +11,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="gate-way" />
+        <module name="cloud-config" />
         <module name="reading-service" />
         <module name="account-service" />
         <module name="eureka-server" />
@@ -31,6 +32,7 @@
       <module name="GateWay" options="-parameters" />
       <module name="Resilience4JCircuitBreakers" options="-parameters" />
       <module name="account-service" options="-parameters" />
+      <module name="cloud-config" options="-parameters" />
       <module name="cloud-config-server" options="-parameters" />
       <module name="eureka-server" options="-parameters" />
       <module name="gate-way" options="-parameters" />

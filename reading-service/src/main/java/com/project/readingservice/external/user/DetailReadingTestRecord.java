@@ -13,6 +13,8 @@ import java.util.UUID;
 @Data
 public class DetailReadingTestRecord {
 
+    private UUID id;
+
     private UUID userId;
 
     private List<Result> userAnswers;

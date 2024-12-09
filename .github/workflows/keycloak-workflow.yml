@@ -1,0 +1,68 @@
+name: Deploy Keycloak to Azure (Free Service)
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - keycloak/docker-compose.yaml  # Trigger on updates to this file
+      - .github/workflows/keycloak-workflow.yml # Trigger on updates to the workflow
+  workflow_dispatch: # Allow manual triggering
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Log in to Azure
+      - name: Log in to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # Step 3: Deploy to Azure App Service (Linux Free Tier)
+      - name: Deploy to Azure App Service
+        run: |
+          # Set variables
+          RESOURCE_GROUP="noideatt"  # Replace with your Resource Group name
+          APP_NAME="keycloak-free-app"      # Replace with your App Service name
+          LOCATION="southeastasia"                # Replace with desired Azure region (free tier available in some regions)
+
+          # Create the Resource Group if it doesn't exist
+          # az group create --name $RESOURCE_GROUP --location $LOCATION
+
+          # Create an App Service Plan (Free Tier)
+          az appservice plan create \
+            --name $APP_NAME-plan \
+            --resource-group $RESOURCE_GROUP \
+            --sku F1 \
+            --is-linux
+
+          # Deploy Keycloak as a container to App Service
+          az webapp create \
+            --resource-group $RESOURCE_GROUP \
+            --plan $APP_NAME-plan \
+            --name $APP_NAME \
+            --deployment-container-image-name quay.io/keycloak/keycloak:23.0.6
+
+          # Set environment variables
+          az webapp config appsettings set \
+            --resource-group $RESOURCE_GROUP \
+            --name $APP_NAME \
+            --settings \
+              POSTGRES_DB=${{ secrets.POSTGRES_DB }} \
+              POSTGRES_USER=${{ secrets.POSTGRES_USER }} \
+              POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} \
+              KEYCLOAK_ADMIN=${{ secrets.KEYCLOAK_ADMIN }} \
+              KEYCLOAK_ADMIN_PASSWORD=${{ secrets.KEYCLOAK_ADMIN_PASSWORD }}
+
+      # Step 4: Validate the deployment
+      - name: Verify Deployment
+        run: |
+          RESOURCE_GROUP="noideatt"
+          APP_NAME="keycloak-free-app"
+          az webapp show --resource-group $RESOURCE_GROUP --name $APP_NAME --query "defaultHostName"
