@@ -1,4 +1,5 @@
-package com.project.readingservice.external;
+package com.project.readingservice.external.data;
+
 
 import lombok.Builder;
 import lombok.Data;
@@ -7,13 +8,11 @@ import java.util.List;
 
 @Data
 @Builder
-public class NewReadingTest {
+public class AnswerData {
 
-    String name;
+    String testId;
 
-    String level;
-
-    List<Passage> passages;
+    String testName;
 
     List<String> answers;
 

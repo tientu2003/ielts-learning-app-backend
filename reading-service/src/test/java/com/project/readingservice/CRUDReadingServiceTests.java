@@ -1,10 +1,9 @@
 package com.project.readingservice;
 
-import com.project.readingservice.external.*;
+import com.project.readingservice.external.data.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -51,7 +50,7 @@ public class CRUDReadingServiceTests {
                 .recommendations(List.of("null"))
                 .build();
 
-        AnswerData actualAnswerData = crudReadingService.getAnswerTest(testName);
+        AnswerData actualAnswerData = crudReadingService.getAnswerTest(testId);
 
 
         assertThat(actualAnswerData).isNotNull();
@@ -74,7 +73,6 @@ public class CRUDReadingServiceTests {
         String testId = "671bdfc73bb6d5496f4e9db9";
 
         QuestionGroup expectedQuestionGroup = QuestionGroup.builder()
-                .readingTestType(ReadingTestType.UNKNOWN)
                 .context(List.of("Do the following statements agree with the information given in Reading Passage 1?"))
                 .questions(List.of("The first Nobel Prize was awarded in 1895."))
                 .build()
@@ -152,7 +150,7 @@ public class CRUDReadingServiceTests {
         QuestionGroup questionGroup1 = QuestionGroup.builder()
                 .context(Arrays.asList("Context for question group 1"))
                 .diagramUrl("http://example.com/diagram1")
-                .readingTestType(ReadingTestType.MultipleChoice)
+                .readingTestType(ReadingTestType.UNKNOWN)
                 .questions(Arrays.asList("What is the main topic?", "Who is the author?"))
                 .build();
 

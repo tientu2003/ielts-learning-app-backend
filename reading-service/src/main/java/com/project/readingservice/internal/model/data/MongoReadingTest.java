@@ -1,16 +1,14 @@
-package com.project.readingservice.internal.model;
+package com.project.readingservice.internal.model.data;
 
-import com.project.readingservice.external.AnswerData;
-import com.project.readingservice.external.NewReadingTest;
-import com.project.readingservice.external.Passage;
-import com.project.readingservice.external.ReadingTestData;
+import com.project.readingservice.external.data.AnswerData;
+import com.project.readingservice.external.data.NewReadingTest;
+import com.project.readingservice.external.data.ReadingTestData;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;

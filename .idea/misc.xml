@@ -14,12 +14,14 @@
         <option value="$PROJECT_DIR$/reading-service/pom.xml" />
         <option value="$PROJECT_DIR$/account-service/pom.xml" />
         <option value="$PROJECT_DIR$/eureka-server/pom.xml" />
+        <option value="$PROJECT_DIR$/cloud-config/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
       <set>
         <option value="$PROJECT_DIR$/GateWay/pom.xml" />
         <option value="$PROJECT_DIR$/Resilience4JCircuitBreakers/pom.xml" />
+        <option value="$PROJECT_DIR$/cloud-config-server/pom.xml" />
       </set>
     </option>
   </component>

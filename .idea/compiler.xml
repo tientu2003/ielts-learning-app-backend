@@ -11,6 +11,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="gate-way" />
+        <module name="cloud-config" />
         <module name="reading-service" />
         <module name="account-service" />
         <module name="eureka-server" />
@@ -19,6 +20,7 @@
     <bytecodeTargetLevel>
       <module name="AccoutService" target="22" />
       <module name="App" target="22" />
+      <module name="cloud-config-server" target="21" />
       <module name="GateWay" target="22" />
       <module name="Resilience4JCircuitBreakers" target="22" />
     </bytecodeTargetLevel>
@@ -30,6 +32,8 @@
       <module name="GateWay" options="-parameters" />
       <module name="Resilience4JCircuitBreakers" options="-parameters" />
       <module name="account-service" options="-parameters" />
+      <module name="cloud-config" options="-parameters" />
+      <module name="cloud-config-server" options="-parameters" />
       <module name="eureka-server" options="-parameters" />
       <module name="gate-way" options="-parameters" />
       <module name="ielts-learning" options="-parameters" />
