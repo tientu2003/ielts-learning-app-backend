@@ -9,7 +9,7 @@ COPY pom.xml .
 COPY src ./src
 
 # Build the application
-RUN ./mvnw clean package -DskipTests
+RUN ./mvn clean package -DskipTests
 
 # Use a lightweight Java 22 runtime for the final image
 FROM eclipse-temurin:22-jre-alpine
