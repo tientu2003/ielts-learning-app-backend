@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - eureka-server/Dockerfile
-      - .github/workflows/eureka-workflow.yml
+      - .github/workflows/eureka-server-workflow.yml
       - eureka-server/pom.xml
       - eureka-server/src/**
   workflow_dispatch: # Allow manual trigger
@@ -34,7 +34,7 @@ jobs:
       # Step 4: Build and push Docker image to Docker Hub
       - name: Build and push Docker image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/eureka-server:java22 -f eureka-server/Dockerfile eureka-server
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/eureka-server:java22 -f eureka-server/Dockerfile
           docker push ${{ secrets.DOCKER_USERNAME }}/eureka-server:java22
 
   deploy:
