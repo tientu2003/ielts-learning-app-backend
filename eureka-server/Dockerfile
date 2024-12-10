@@ -1,4 +1,4 @@
-FROM openjdk:23-jre-slim
+FROM openjdk:25-oraclelinux9
 
 WORKDIR /app
 COPY target/*.jar /app/eureka-server.jar
