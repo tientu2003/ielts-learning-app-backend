@@ -1,5 +1,4 @@
-# Use Maven image with JDK 22 (early-access version for JDK 22)
-FROM eclipse-temurin:22-jdk-alpine as builder
+FROM eclipse-temurin:21-jdk-alpine as builder
 
 # Set the working directory
 WORKDIR /app
@@ -12,7 +11,7 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # Use a lightweight Java 22 runtime for the final image
-FROM eclipse-temurin:22-jre-alpine
+FROM eclipse-temurin:21-jre-alpine
 
 # Set the working directory
 WORKDIR /app
