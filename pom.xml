@@ -14,7 +14,7 @@
 
 
   <properties>
-    <java.version>22</java.version>
+    <java.version>23</java.version>
     <spring-cloud.version>2023.0.3</spring-cloud.version>
   </properties>
 
@@ -101,5 +101,6 @@
     <module>gate-way</module>
     <module>reading-service</module>
     <module>cloud-config</module>
+    <module>listening-service</module>
   </modules>
 </project>

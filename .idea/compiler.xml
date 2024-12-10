@@ -13,6 +13,7 @@
         <module name="gate-way" />
         <module name="cloud-config" />
         <module name="reading-service" />
+        <module name="listening-service" />
         <module name="account-service" />
         <module name="eureka-server" />
       </profile>
@@ -37,6 +38,7 @@
       <module name="eureka-server" options="-parameters" />
       <module name="gate-way" options="-parameters" />
       <module name="ielts-learning" options="-parameters" />
+      <module name="listening-service" options="-parameters" />
       <module name="reading-service" options="-parameters" />
     </option>
   </component>
