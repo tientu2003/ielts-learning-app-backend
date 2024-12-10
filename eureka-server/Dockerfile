@@ -1,4 +1,4 @@
-FROM openjdk:21-jre-slim
+FROM openjdk:23-jre-slim
 
 WORKDIR /app
 COPY target/*.jar /app/eureka-server.jar
