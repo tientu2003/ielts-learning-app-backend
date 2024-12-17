@@ -1,4 +1,4 @@
-name: Deploy Keycloak to Azure (Free Service)
+name: Deploy Keycloak to Azure (HTTPS Enabled)
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - keycloak/docker-compose.yaml  # Trigger on updates to this file
-      - .github/workflows/keycloak-workflow.yml # Trigger on updates to the workflow
+      - .github/workflows/keycloak-workflow.yml # Trigger on updates to this workflow
   workflow_dispatch: # Allow manual triggering
 
 jobs:
@@ -24,42 +24,50 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      # Step 3: Deploy to Azure App Service (Linux Free Tier)
-      - name: Deploy to Azure App Service
+      # Step 3: Deploy Bitnami Keycloak to Azure App Service
+      - name: Deploy Keycloak with HTTPS
         run: |
-          # Set variables
-          RESOURCE_GROUP="noideatt"  # Replace with your Resource Group name
-          APP_NAME="keycloak-free-app"      # Replace with your App Service name
-          LOCATION="southeastasia"                # Replace with desired Azure region (free tier available in some regions)
+          # Define variables
+          RESOURCE_GROUP="noideatt"                     # Replace with your Resource Group name
+          APP_NAME="keycloak-bitnami-app"               # Replace with your Azure App Service name
+          LOCATION="southeastasia"                      # Replace with the desired Azure region
 
-          # Create the Resource Group if it doesn't exist
-          # az group create --name $RESOURCE_GROUP --location $LOCATION
-
-          # Create an App Service Plan (Free Tier)
+          # Create an App Service Plan (Linux Free Tier)
           az appservice plan create \
             --name $APP_NAME-plan \
             --resource-group $RESOURCE_GROUP \
             --sku F1 \
-            --is-linux
+            --is-linux \
+            --location $LOCATION
 
-          # Deploy Keycloak as a container to App Service
+          # Deploy the Bitnami Keycloak container to Azure App Service
           az webapp create \
             --resource-group $RESOURCE_GROUP \
             --plan $APP_NAME-plan \
             --name $APP_NAME \
-            --deployment-container-image-name quay.io/keycloak/keycloak:23.0.6
+            --deployment-container-image-name bitnami/keycloak:latest
 
-          # Set environment variables
+          # Set environment variables for HTTPS configuration
           az webapp config appsettings set \
             --resource-group $RESOURCE_GROUP \
             --name $APP_NAME \
             --settings \
-              KEYCLOAK_ADMIN=${{ secrets.KEYCLOAK_ADMIN }} \
-              KEYCLOAK_ADMIN_PASSWORD=${{ secrets.KEYCLOAK_ADMIN_PASSWORD }}
+              KEYCLOAK_ADMIN_USER=${{ secrets.KEYCLOAK_ADMIN }} \
+              KEYCLOAK_ADMIN_PASSWORD=${{ secrets.KEYCLOAK_ADMIN_PASSWORD }} \
+              KEYCLOAK_HTTP_PORT=8080 \
+              KEYCLOAK_HTTPS_PORT=8443 \
+              KEYCLOAK_ENABLE_HTTPS=true \
+              KEYCLOAK_PROXY=edge
 
       # Step 4: Validate the deployment
       - name: Verify Deployment
         run: |
+          # Check deployment URL
           RESOURCE_GROUP="noideatt"
-          APP_NAME="keycloak-free-app"
-          az webapp show --resource-group $RESOURCE_GROUP --name $APP_NAME --query "defaultHostName"
+          APP_NAME="keycloak-bitnami-app"
+
+          echo "Keycloak App URL:"
+          az webapp show --resource-group $RESOURCE_GROUP --name $APP_NAME --query "defaultHostName" -o tsv
+
+          echo "Access Keycloak via HTTPS:"
+          echo "https://<your-app-name>.azurewebsites.net:8443"
