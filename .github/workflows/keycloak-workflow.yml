@@ -42,5 +42,5 @@ jobs:
         run: |
           az containerapp show \
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-            --name keycloak-app \
+            --name keycloak-noideatt-app \
             --query "{State:properties.provisioningState,URL:properties.configuration.ingress.fqdn}"
