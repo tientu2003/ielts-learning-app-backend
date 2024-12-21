@@ -78,9 +78,9 @@ public class ReadingServiceApi {
         return ResponseEntity.ok(answerData);
     }
 
-    @GetMapping("/data")
-    public ResponseEntity<ReadingTestData> getTestData(@RequestBody String testName){
-        ReadingTestData readingTestData = crudReadingService.getReadingTestData(testName);
+    @GetMapping("/data/{id}")
+    public ResponseEntity<ReadingTestData> getTestData(@PathVariable String id){
+        ReadingTestData readingTestData = crudReadingService.getReadingTestData(id);
         if(readingTestData == null){
             return ResponseEntity.notFound().build();
         }

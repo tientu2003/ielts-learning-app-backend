@@ -1,19 +1,16 @@
 package com.project.readingservice;
 
-import com.project.readingservice.external.data.AnswerData;
-import com.project.readingservice.external.data.NewReadingTest;
-import com.project.readingservice.external.data.ReadingTestAlreadyExistsException;
-import com.project.readingservice.external.data.ReadingTestData;
+import com.project.readingservice.external.data.*;
 
 import java.util.List;
 
 public interface CRUDReadingService {
 
-    List<String> listAllReadingTestName();
+    List<ExamData> listAllReadingTestName();
     
     AnswerData getAnswerTest(String testId);
 
-    ReadingTestData getReadingTestData(String testName);
+    ReadingTestData getReadingTestData(String id);
 
     ReadingTestData createNewReadingTest(NewReadingTest newReadingTest) throws ReadingTestAlreadyExistsException;
 
