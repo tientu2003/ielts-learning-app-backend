@@ -61,17 +61,14 @@ jobs:
           CONTAINER_APP_NAME="eureka-noideatt-app"
           LOCATION="southeastasia"
           
-
           # Deploy the Docker image to Azure Container App
           az containerapp create \
             --name $CONTAINER_APP_NAME \
             --resource-group $RESOURCE_GROUP \
             --image ${{ secrets.DOCKER_USERNAME }}/eureka-server:latest \
             --cpu 0.25 --memory 0.5Gi \
-            --env ${{secrets.AZURE_CONTAINERAPPS_ENVIRONMENT}} \
             --min-replicas 0 \
             --max-replicas 1 \
             --ingress external \
-            --target-port 8761  # Corrected syntax
-
-          # Optionally, configure the container app for more advanced settings (e.g., scaling, environment variables)
+            --target-port 8761 \
+            --environment ${{secrets.AZURE_CONTAINERAPPS_ENVIRONMENT}}  # Make sure to add the environment flag correctly
