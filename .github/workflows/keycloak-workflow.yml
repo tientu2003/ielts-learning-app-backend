@@ -27,7 +27,7 @@ jobs:
         run: |
           az containerapp create \
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-            --name keycloak-app \
+            --name keycloak-noideatt-app \
             --image bitnami/keycloak:latest \
             --environment ${{ secrets.AZURE_CONTAINERAPPS_ENVIRONMENT }} \
             --cpu 0.25 \
