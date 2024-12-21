@@ -31,7 +31,7 @@ jobs:
             --image bitnami/keycloak:latest \
             --environment ${{ secrets.AZURE_CONTAINERAPPS_ENVIRONMENT }} \
             --cpu 0.25 \
-            --memory 512Mi \
+            --memory 0.5Gi \
             --ingress external \
             --target-port 8080 \
             --min-replicas 0 \
