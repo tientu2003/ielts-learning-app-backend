@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - .github/workflows/keycloak-workflow.yml
+      - keycloak/**
   workflow_dispatch:
 
 jobs:
