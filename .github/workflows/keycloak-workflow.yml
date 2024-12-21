@@ -36,7 +36,9 @@ jobs:
             --target-port 8080 \
             --min-replicas 0 \
             --max-replicas 1 \
-            --env-vars KEYCLOAK_USER=admin KEYCLOAK_PASSWORD=${{ secrets.KEYCLOAK_PASSWORD }}
+            --env-vars KEYCLOAK_USER=admin KEYCLOAK_PASSWORD=${{ secrets.KEYCLOAK_PASSWORD }} \
+            KEYCLOAK_DB=H2 \
+            KEYCLOAK_DB_URL=jdbc:h2:mem:keycloak;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
 
       - name: Verify deployment
         run: |
