@@ -1,4 +1,4 @@
-name: Deploy Bitnami Keycloak to Azure Container Apps (ACA)
+name: Deploy Keycloak to Azure Container Apps (ACA)
 
 on:
   push:
@@ -25,28 +25,27 @@ jobs:
         run: |
           az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Deploy Bitnami Keycloak to Azure Container Apps with PostgreSQL
+      - name: Deploy Keycloak to Azure Container Apps with PostgreSQL
         run: |
           az containerapp create \
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
             --name keycloak-noideatt-app \
-            --image bitnami/keycloak:latest \
+            --image quay.io/keycloak/keycloak:23.0.6 \
             --environment ${{ secrets.AZURE_CONTAINERAPPS_ENVIRONMENT }} \
-            --cpu 0.25 \
-            --memory 0.5Gi \
+            --cpu 1 \
+            --memory 1Gi \
             --ingress external \
             --target-port 8080 \
             --min-replicas 0 \
             --max-replicas 1 \
             --env-vars \
-              KEYCLOAK_USER=admin \
-              KEYCLOAK_PASSWORD=${{ secrets.KEYCLOAK_PASSWORD }} \
-              DB_VENDOR=postgres \
-              DB_ADDR=${{ secrets.POSTGRES_DB_HOST }} \
-              DB_PORT=5432 \
-              DB_DATABASE=${{ secrets.POSTGRES_DB_NAME }} \
-              DB_USER=${{ secrets.POSTGRES_DB_USER }} \
-              DB_PASSWORD=${{ secrets.POSTGRES_DB_PASSWORD }}
+              KC_DB=postgres \
+              KC_DB_URL=jdbc:postgresql://${{ secrets.POSTGRES_DB_HOST }}:5432/${{ secrets.POSTGRES_DB_NAME }} \
+              KC_DB_USERNAME=${{ secrets.POSTGRES_DB_USER }} \
+              KC_DB_PASSWORD=${{ secrets.POSTGRES_DB_PASSWORD }} \
+              KC_HOSTNAME_STRICT=false \
+              KC_ADMIN=admin \
+              KC_ADMIN_PASSWORD=${{ secrets.KEYCLOAK_PASSWORD }}
 
       - name: Verify deployment
         run: |
