@@ -32,7 +32,7 @@ jobs:
             --name keycloak-noideatt-app \
             --image quay.io/keycloak/keycloak:23.0.6 \
             --environment ${{ secrets.AZURE_CONTAINERAPPS_ENVIRONMENT }} \
-            --cpu 1 \
+            --cpu 0.5 \
             --memory 1Gi \
             --ingress external \
             --target-port 8080 \
