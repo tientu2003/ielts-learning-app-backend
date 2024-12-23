@@ -25,7 +25,7 @@ jobs:
         run: |
           az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Deploy Bitnami Keycloak to Azure Container Apps
+      - name: Deploy Bitnami Keycloak to Azure Container Apps with PostgreSQL
         run: |
           az containerapp create \
             --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
@@ -38,9 +38,15 @@ jobs:
             --target-port 8080 \
             --min-replicas 0 \
             --max-replicas 1 \
-            --env-vars KEYCLOAK_USER=admin KEYCLOAK_PASSWORD=${{ secrets.KEYCLOAK_PASSWORD }} \
-            KEYCLOAK_DB=H2 \
-            KEYCLOAK_DB_URL=jdbc:h2:mem:keycloak;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+            --env-vars \
+              KEYCLOAK_USER=admin \
+              KEYCLOAK_PASSWORD=${{ secrets.KEYCLOAK_PASSWORD }} \
+              DB_VENDOR=postgres \
+              DB_ADDR=${{ secrets.POSTGRES_DB_HOST }} \
+              DB_PORT=5432 \
+              DB_DATABASE=${{ secrets.POSTGRES_DB_NAME }} \
+              DB_USER=${{ secrets.POSTGRES_DB_USER }} \
+              DB_PASSWORD=${{ secrets.POSTGRES_DB_PASSWORD }}
 
       - name: Verify deployment
         run: |
