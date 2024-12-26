@@ -47,14 +47,15 @@ public class ReadingServiceApi {
     }
 
     @PostMapping("/user/{id}/answer")
-    public ResponseEntity<DetailReadingTestRecord> sendUserAnswer(@PathVariable("id") UUID userId, @RequestBody UserAnswer userAnswer) {
-        DetailReadingTestRecord received =  userReadingService.saveUserAnswerData(userId, userAnswer);
+    public ResponseEntity<String> sendUserAnswer(@PathVariable("id") String userId, @RequestBody UserAnswer userAnswer) {
+        DetailReadingTestRecord received =  userReadingService.saveUserAnswerData(UUID.fromString(userId), userAnswer);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequestUri()
                 .path("/{record-id}")
-                .buildAndExpand(received.getUserId())
+                .buildAndExpand(received.getId())
                 .toUri();
-        return ResponseEntity.created(location).build() ;
+        log.info("New Reading Test Record: {}", location);
+        return ResponseEntity.created(location).body(received.getId());
     }
 
     @GetMapping("/user/{id}/answer/{record_id}")

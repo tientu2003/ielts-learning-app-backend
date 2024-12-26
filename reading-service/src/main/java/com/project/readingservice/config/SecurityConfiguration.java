@@ -14,12 +14,12 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
+        http .cors(Customizer.withDefaults())
             .authorizeHttpRequests(auth ->
                 auth.requestMatchers("public/api/reading/**",
-                                "swagger-ui/**",
-                                "swagger-ui**",
-                                "/v3/api-docs/**",
+                            "swagger-ui/**",
+                            "swagger-ui**",
+                            "/v3/api-docs/**",
                                 "/v3/api-docs**").permitAll()
                 .anyRequest()
                 .authenticated()

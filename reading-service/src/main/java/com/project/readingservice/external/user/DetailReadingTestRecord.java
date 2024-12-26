@@ -13,7 +13,7 @@ import java.util.UUID;
 @Data
 public class DetailReadingTestRecord {
 
-    private UUID id;
+    private String id;
 
     private UUID userId;
 
