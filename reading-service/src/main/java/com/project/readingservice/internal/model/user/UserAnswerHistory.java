@@ -81,7 +81,7 @@ public class UserAnswerHistory {
 
     public DetailReadingTestRecord toDetailReadingTestRecord(AnswerData answerData) {
         return DetailReadingTestRecord.builder()
-                .id(UUID.fromString(this.id))
+                .id(this.id)
                 .userId(UUID.fromString(this.userId))
                 .score(this.score)
                 .createAt(this.createdAt)

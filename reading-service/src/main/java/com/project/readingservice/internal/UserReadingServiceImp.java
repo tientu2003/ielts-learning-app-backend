@@ -10,6 +10,7 @@ import com.project.readingservice.external.user.UserAnswer;
 import com.project.readingservice.external.util.ReadingScore;
 import com.project.readingservice.internal.model.data.MongoReadingTest;
 import com.project.readingservice.internal.model.user.UserAnswerHistory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
+@Slf4j
 @Service
 public class UserReadingServiceImp implements UserReadingService {
 
@@ -44,6 +46,8 @@ public class UserReadingServiceImp implements UserReadingService {
     @Override
     @Transactional
     public DetailReadingTestRecord saveUserAnswerData(UUID userId, UserAnswer userAnswer) {
+
+        log.info("User {} save user answer data", userId);
 
         AnswerData testAnswer = crudReadingService.getAnswerTest(userAnswer.getTestId());
 

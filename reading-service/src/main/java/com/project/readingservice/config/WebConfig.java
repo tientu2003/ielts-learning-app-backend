@@ -6,13 +6,15 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
-    
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000") // Thay bằng domain frontend
-                .allowedMethods("*")
-                .allowedHeaders("*")
-                .allowCredentials(true);
+        registry.addMapping("/**") // Áp dụng cho tất cả các endpoint
+                    .allowedOrigins("http://localhost:3000") // Chỉ cho phép từ nguồn này
+                    .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Cho phép các method
+                    .allowedHeaders("*") // Cho phép tất cả các header
+                    .exposedHeaders("Authorization") // Các header được trả về (nếu cần)
+                    .allowCredentials(true) // Cho phép sử dụng cookie hoặc xác thực
+                    .maxAge(3600); // Thời gian cache của preflight request (giây)
     }
 }
