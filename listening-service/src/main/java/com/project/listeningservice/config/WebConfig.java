@@ -1,4 +1,4 @@
-package com.project.readingservice.config;
+package com.project.listeningservice.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
