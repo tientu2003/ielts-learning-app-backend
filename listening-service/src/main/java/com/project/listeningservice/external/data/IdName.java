@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class IdName {
-    private String name;
     private String id;
+    private String testName;
 }
