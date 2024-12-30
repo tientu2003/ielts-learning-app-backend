@@ -15,11 +15,24 @@
       </jdbc-additional-properties>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="@readingtest.hzuof.mongodb.net" uuid="bc8cbd2b-962c-4e00-a798-ccaec2d1487d">
-      <driver-ref>mongo</driver-ref>
+    <data-source source="LOCAL" name="listening@readingtest.hzuof.mongodb.net" uuid="bc8cbd2b-962c-4e00-a798-ccaec2d1487d">
+      <driver-ref>mongo.4</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.dbschema.MongoJdbcDriver</jdbc-driver>
-      <jdbc-url>mongodb+srv://readingtest.hzuof.mongodb.net/?retryWrites=true&amp;w=majority&amp;appName=ReadingTest</jdbc-url>
+      <jdbc-url>mongodb+srv://readingtest.hzuof.mongodb.net/listening?retryWrites=true&amp;w=majority&amp;appName=ReadingTest</jdbc-url>
+      <jdbc-additional-properties>
+        <property name="com.intellij.clouds.kubernetes.db.host.port" />
+        <property name="com.intellij.clouds.kubernetes.db.enabled" value="false" />
+        <property name="com.intellij.clouds.kubernetes.db.resource.type" value="Deployment" />
+        <property name="com.intellij.clouds.kubernetes.db.container.port" />
+      </jdbc-additional-properties>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+    <data-source source="LOCAL" name="keycloak-noideatt@ielts-noideatt.postgres.database.azure.com" uuid="42586f87-81e5-4713-9d06-0dec79a3d1bc">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://ielts-noideatt.postgres.database.azure.com:5432/keycloak-noideatt</jdbc-url>
       <jdbc-additional-properties>
         <property name="com.intellij.clouds.kubernetes.db.host.port" />
         <property name="com.intellij.clouds.kubernetes.db.enabled" value="false" />

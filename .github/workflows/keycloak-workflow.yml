@@ -1,59 +1,59 @@
-name: Deploy Keycloak to Azure Container Apps (ACA)
+  name: Deploy Keycloak to Azure Container Apps (ACA)
 
-on:
-  push:
-    branches:
-      - main
-    paths:
-      - keycloak/**
-  workflow_dispatch:
+  on:
+    push:
+      branches:
+        - main
+      paths:
+        - keycloak/**
+    workflow_dispatch:
 
-jobs:
-  deploy-keycloak:
-    runs-on: ubuntu-latest
+  jobs:
+    deploy-keycloak:
+      runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v3
 
-      - name: Log in to Azure
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+        - name: Log in to Azure
+          uses: azure/login@v1
+          with:
+            creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Set Azure context
-        run: |
-          az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        - name: Set Azure context
+          run: |
+            az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Deploy Keycloak to Azure Container Apps with PostgreSQL
-        run: |
-          az containerapp create \
-            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-            --name keycloak-noideatt-app \
-            --image quay.io/keycloak/keycloak:23.0.6 \
-            --environment ${{ secrets.AZURE_CONTAINERAPPS_ENVIRONMENT }} \
-            --cpu 0.5 \
-            --memory 1Gi \
-            --ingress external \
-            --target-port 8080 \
-            --min-replicas 0 \
-            --max-replicas 1 \
-            --env-vars \
-              KC_DB=postgres \
-              KC_DB_URL_HOST=${{ secrets.POSTGRES_DB_HOST }} \
-              KC_DB_URL_PORT=5432 \
-              KC_DB_USERNAME=${{ secrets.POSTGRES_DB_USER }} \
-              KC_DB_PASSWORD=${{ secrets.POSTGRES_DB_PASSWORD }} \
-              KC_DB_DATABASE=${{ secrets.POSTGRES_DB_NAME }} \
-              KEYCLOAK_ADMIN=admin \
-              KEYCLOAK_ADMIN_PASSWORD=${{ secrets.KEYCLOAK_PASSWORD }} \
-            --secrets \
-              db-password=${{ secrets.POSTGRES_DB_PASSWORD }} \
-              keycloak-admin-password=${{ secrets.KEYCLOAK_PASSWORD }}
+        - name: Deploy Keycloak to Azure Container Apps with PostgreSQL
+          run: |
+            az containerapp create \
+              --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+              --name keycloak-noideatt-app \
+              --image quay.io/keycloak/keycloak:23.0.6 \
+              --environment ${{ secrets.AZURE_CONTAINERAPPS_ENVIRONMENT }} \
+              --cpu 0.5 \
+              --memory 1Gi \
+              --ingress external \
+              --target-port 8080 \
+              --min-replicas 0 \
+              --max-replicas 1 \
+              --env-vars \
+                KC_DB=postgres \
+                KC_DB_URL_HOST=${{ secrets.POSTGRES_DB_HOST }} \
+                KC_DB_URL_PORT=5432 \
+                KC_DB_USERNAME=${{ secrets.POSTGRES_DB_USER }} \
+                KC_DB_PASSWORD=${{ secrets.POSTGRES_DB_PASSWORD }} \
+                KC_DB_DATABASE=${{ secrets.POSTGRES_DB_NAME }} \
+                KEYCLOAK_ADMIN=admin \
+                KEYCLOAK_ADMIN_PASSWORD=${{ secrets.KEYCLOAK_PASSWORD }} \
+              --secrets \
+                db-password=${{ secrets.POSTGRES_DB_PASSWORD }} \
+                keycloak-admin-password=${{ secrets.KEYCLOAK_PASSWORD }}
 
-      - name: Verify deployment
-        run: |
-          az containerapp show \
-            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-            --name keycloak-noideatt-app \
-            --query "{State:properties.provisioningState,URL:properties.configuration.ingress.fqdn}"
+        - name: Verify deployment
+          run: |
+            az containerapp show \
+              --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+              --name keycloak-noideatt-app \
+              --query "{State:properties.provisioningState,URL:properties.configuration.ingress.fqdn}"
