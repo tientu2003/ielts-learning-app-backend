@@ -40,10 +40,10 @@ jobs:
       - name: Build and push Docker image
         run: |
           docker buildx build \
-          --build-arg SPRING_DATA_MONGODB_URI=${{ secrets.SPRING_DATA_MONGODB_URI }} \
-          --build-arg SPRING_DATA_MONGODB_READING_DATABASE=${{ secrets.SPRING_DATA_MONGODB_READING_DATABASE }} \
-          --build-arg RESOURCESERVER_JWT_JWK_SET_URI=${{ secrets.RESOURCESERVER_JWT_JWK_SET_URI }} \
-          --build-arg EUREKA_SERVER_URL=${{ secrets.EUREKA_SERVER_URL }} \
+          --build-arg SPRING_DATA_MONGODB_URI="${{ secrets.SPRING_DATA_MONGODB_URI }}" \
+          --build-arg SPRING_DATA_MONGODB_READING_DATABASE="${{ secrets.SPRING_DATA_MONGODB_READING_DATABASE }}" \
+          --build-arg RESOURCESERVER_JWT_JWK_SET_URI="${{ secrets.RESOURCESERVER_JWT_JWK_SET_URI }}" \
+          --build-arg EUREKA_SERVER_URL="${{ secrets.EUREKA_SERVER_URL }}" \
           -t ${{ secrets.DOCKER_USERNAME }}/reading-service:latest -f reading-service/Dockerfile reading-service/
           docker push ${{ secrets.DOCKER_USERNAME }}/reading-service:latest
 
