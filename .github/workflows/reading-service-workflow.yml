@@ -79,7 +79,7 @@ jobs:
           # Wait for the container to be in running state
           until az containerapp show --name $CONTAINER_APP_NAME --resource-group $RESOURCE_GROUP --query "properties.provisioningState" | grep -q "Succeeded"; do
             echo "Waiting for container to be provisioned..."
-            sleep 15
+            sleep 30
           done
       - name: Update environment variables for the container
         run: |
