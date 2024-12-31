@@ -22,6 +22,20 @@ spring:
             filters:
               TokenRelay=
 
+          - id: publicListeningServiceRoute
+            predicates:
+              - Path=/public/api/listening/**
+            uri:
+              lb://LISTENING-SERVICE
+
+          - id: listeningServiceRoute
+            predicates:
+              - Path=/api/listening/**
+            uri:
+              lb://LISTENING-SERVICE
+            filters:
+              TokenRelay=
+
   security:
     oauth2:
       resourceserver:
