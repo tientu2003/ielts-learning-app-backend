@@ -75,5 +75,4 @@ jobs:
               SPRING_DATA_MONGODB_URI=${{ secrets.SPRING_DATA_MONGODB_URI }} \
               SPRING_DATA_MONGODB_DATABASE=${{ secrets.SPRING_DATA_MONGODB_READING_DATABASE }} \
               RESOURCESERVER_JWT_JWK_SET_URI=${{ secrets.RESOURCESERVER_JWT_JWK_SET_URI }} \
-              EUREKA_SERVER_URL=${{ secrets.EUREKA_SERVER_URL }} \
-              SPRING_PROFILES_ACTIVE=prod
+              EUREKA_SERVER_URL=${{ secrets.EUREKA_SERVER_URL }}
