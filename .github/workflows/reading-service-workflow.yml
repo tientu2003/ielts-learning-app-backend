@@ -39,7 +39,7 @@ jobs:
       # Step 4: Build and push Docker image to Docker Hub
       - name: Build and push Docker image
         run: |
-          docker build \
+          docker buildx build \
           --build-arg SPRING_DATA_MONGODB_URI=${{ secrets.SPRING_DATA_MONGODB_URI }} \
           --build-arg SPRING_DATA_MONGODB_READING_DATABASE=${{ secrets.SPRING_DATA_MONGODB_READING_DATABASE }} \
           --build-arg RESOURCESERVER_JWT_JWK_SET_URI=${{ secrets.RESOURCESERVER_JWT_JWK_SET_URI }} \
