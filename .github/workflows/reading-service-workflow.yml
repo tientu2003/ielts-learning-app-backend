@@ -66,6 +66,7 @@ jobs:
             --resource-group $RESOURCE_GROUP \
             --image ${{ secrets.DOCKER_USERNAME }}/reading-service:latest \
             --cpu 0.25 --memory 0.5Gi \
+            --environment ${{secrets.AZURE_CONTAINERAPPS_ENVIRONMENT}} \
             --min-replicas 0 \
             --max-replicas 1 \
             --ingress external \
@@ -74,4 +75,3 @@ jobs:
                SPRING_DATA_MONGODB_READING_DATABASE=${{ secrets.SPRING_DATA_MONGODB_READING_DATABASE }} \
                RESOURCESERVER_JWT_JWK_SET_URI=${{ secrets.RESOURCESERVER_JWT_JWK_SET_URI }} \
                EUREKA_SERVER_URL=${{ secrets.EUREKA_SERVER_URL }}\
-            --environment ${{secrets.AZURE_CONTAINERAPPS_ENVIRONMENT}} \
