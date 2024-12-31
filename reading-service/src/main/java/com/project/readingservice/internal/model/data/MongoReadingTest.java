@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 @NoArgsConstructor
 @Data
-@Document(collection = "reading_test")
+@Document(collection = "reading_exam")
 public class MongoReadingTest {
 
     @Id
