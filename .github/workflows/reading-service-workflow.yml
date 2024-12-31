@@ -70,5 +70,8 @@ jobs:
             --max-replicas 1 \
             --ingress external \
             --target-port 8082 \
+            --env-vars SPRING_DATA_MONGODB_URI=${{ secrets.SPRING_DATA_MONGODB_URI }} \
+               SPRING_DATA_MONGODB_READING_DATABASE=${{ secrets.SPRING_DATA_MONGODB_READING_DATABASE }} \
+               RESOURCESERVER_JWT_JWK_SET_URI=${{ secrets.RESOURCESERVER_JWT_JWK_SET_URI }} \
+               EUREKA_SERVER_URL=${{ secrets.EUREKA_SERVER_URL }}\
             --environment ${{secrets.AZURE_CONTAINERAPPS_ENVIRONMENT}} \
-            --env-vars RESOURCESERVER_JWT_JWK_SET_URI=${{ secrets.RESOURCESERVER_JWT_JWK_SET_URI }} SPRING_DATA_MONGODB_URI=${{ secrets.SPRING_DATA_MONGODB_URI }} SPRING_DATA_MONGODB_READING_DATABASE=${{ secrets.SPRING_DATA_MONGODB_READING_DATABASE }} EUREKA_SERVER_URL=${{ secrets.EUREKA_SERVER_URL }}
