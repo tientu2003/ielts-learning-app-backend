@@ -70,8 +70,23 @@ jobs:
             --min-replicas 0 \
             --max-replicas 1 \
             --ingress external \
-            --target-port 8082 \
-            --env-vars SPRING_DATA_MONGODB_URI=${{ secrets.SPRING_DATA_MONGODB_URI }} \
-               SPRING_DATA_MONGODB_READING_DATABASE=${{ secrets.SPRING_DATA_MONGODB_READING_DATABASE }} \
-               RESOURCESERVER_JWT_JWK_SET_URI=${{ secrets.RESOURCESERVER_JWT_JWK_SET_URI }} \
-               EUREKA_SERVER_URL=${{ secrets.EUREKA_SERVER_URL }}\
+            --target-port 8082
+      - name: Wait for the container to start
+        run: |
+          CONTAINER_APP_NAME="reading-service-noideatt-app"
+          RESOURCE_GROUP=${{ secrets.AZURE_RESOURCE_GROUP }}
+          echo "Waiting for container to start..."
+          # Wait for the container to be in running state
+          until az containerapp show --name $CONTAINER_APP_NAME --resource-group $RESOURCE_GROUP --query "properties.provisioningState" | grep -q "Succeeded"; do
+            echo "Waiting for container to be provisioned..."
+            sleep 15
+          done
+      - name: Update environment variables for the container
+        run: |
+          az containerapp update \
+            --name $CONTAINER_APP_NAME \
+            --resource-group $RESOURCE_GROUP \
+            --set-env-vars SPRING_DATA_MONGODB_URI=${{ secrets.SPRING_DATA_MONGODB_URI }} \
+                 SPRING_DATA_MONGODB_READING_DATABASE=${{ secrets.SPRING_DATA_MONGODB_READING_DATABASE }} \
+                 RESOURCESERVER_JWT_JWK_SET_URI=${{ secrets.RESOURCESERVER_JWT_JWK_SET_URI }} \
+                 EUREKA_SERVER_URL=${{ secrets.EUREKA_SERVER_URL }}
