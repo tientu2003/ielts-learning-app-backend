@@ -31,7 +31,7 @@ public class CRUDReadingServiceTests {
     @Test
     void shouldGetCorrectAnswerTest(){
 
-        String testId = "671bdfc73bb6d5496f4e9db9";
+        String testId = "6773f9cee52e85accb12dd23";
 
         String testName = "Recent IELTS Reading Actual test 80\n";
 
@@ -55,7 +55,7 @@ public class CRUDReadingServiceTests {
 
         assertThat(actualAnswerData).isNotNull();
 
-        assertThat(actualAnswerData.getTestId()).isEqualTo("671bdfc73bb6d5496f4e9db9");
+        assertThat(actualAnswerData.getTestId()).isEqualTo("6773f9cee52e85accb12dd23");
 
         assertThat(actualAnswerData.getTestName()).isEqualTo(testName);
 
@@ -70,7 +70,7 @@ public class CRUDReadingServiceTests {
 
         String expectedName = "Recent IELTS Reading Actual test 80\n";
 
-        String testId = "671bdfc73bb6d5496f4e9db9";
+        String testId = "6773f9cee52e85accb12dd23";
 
         QuestionGroup expectedQuestionGroup = QuestionGroup.builder()
                 .context(List.of("Do the following statements agree with the information given in Reading Passage 1?"))

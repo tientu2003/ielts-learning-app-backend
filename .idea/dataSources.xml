@@ -15,11 +15,11 @@
       </jdbc-additional-properties>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="listening@readingtest.hzuof.mongodb.net" uuid="bc8cbd2b-962c-4e00-a798-ccaec2d1487d">
+    <data-source source="LOCAL" name="@ielts-master.hzuof.mongodb.net" uuid="bc8cbd2b-962c-4e00-a798-ccaec2d1487d">
       <driver-ref>mongo.4</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.dbschema.MongoJdbcDriver</jdbc-driver>
-      <jdbc-url>mongodb+srv://readingtest.hzuof.mongodb.net/listening?retryWrites=true&amp;w=majority&amp;appName=ReadingTest</jdbc-url>
+      <jdbc-url>mongodb+srv://ielts-master.hzuof.mongodb.net/?retryWrites=true&amp;w=majority&amp;appName=ielts-master</jdbc-url>
       <jdbc-additional-properties>
         <property name="com.intellij.clouds.kubernetes.db.host.port" />
         <property name="com.intellij.clouds.kubernetes.db.enabled" value="false" />
