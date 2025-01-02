@@ -18,7 +18,6 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/api/listening")
-@SecurityRequirement(name="bearerAuth")
 public class ListeningServiceApi {
     final CrudListeningService crudListeningService;
     final UserListeningService userListeningService;
