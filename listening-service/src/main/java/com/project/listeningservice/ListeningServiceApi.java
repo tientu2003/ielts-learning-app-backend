@@ -6,7 +6,6 @@ import com.project.listeningservice.external.user.DetailRecord;
 import com.project.listeningservice.external.user.ListeningSummary;
 import com.project.listeningservice.external.user.UserAnswer;
 import com.project.listeningservice.external.user.UserSimpleRecord;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

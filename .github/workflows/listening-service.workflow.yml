@@ -44,6 +44,7 @@ jobs:
           --build-arg SPRING_DATA_MONGODB_LISTENING_DATABASE="${{ secrets.SPRING_DATA_MONGODB_LISTENING_DATABASE }}" \
           --build-arg RESOURCESERVER_JWT_JWK_SET_URI="${{ secrets.RESOURCESERVER_JWT_JWK_SET_URI }}" \
           --build-arg EUREKA_SERVER_URL="${{ secrets.EUREKA_SERVER_URL }}" \
+          --build-arg CORS_ORIGINS="${{ secrets.CORS_ORIGINS }}" \
           -t ${{ secrets.DOCKER_USERNAME }}/listening-service:latest -f listening-service/Dockerfile listening-service/
           docker push ${{ secrets.DOCKER_USERNAME }}/listening-service:latest
 
