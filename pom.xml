@@ -102,5 +102,6 @@
     <module>reading-service</module>
     <module>cloud-config</module>
     <module>listening-service</module>
+    <module>writing-service</module>
   </modules>
 </project>
