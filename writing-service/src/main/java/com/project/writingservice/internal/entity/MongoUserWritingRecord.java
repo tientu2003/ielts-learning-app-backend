@@ -27,4 +27,7 @@ public class MongoUserWritingRecord {
 
     @Field(name = "score")
     private Double score;
+
+    @Field(name = "context")
+    private String context;
 }
