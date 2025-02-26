@@ -1,4 +1,4 @@
-package com.project.readingservice;
+package com.project.writingservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

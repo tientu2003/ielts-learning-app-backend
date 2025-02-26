@@ -17,7 +17,9 @@ public class CrudWritingServiceImpl implements CrudWritingService {
 
     @Override
     public List<IdName> getListAllWritingExams() {
-        return List.of();
+        return writingExamRepository.getAll().stream().map(writingExam ->
+                new IdName(writingExam.getId(),writingExam.getContext())
+        ).toList();
     }
 
     @Override
@@ -25,3 +27,4 @@ public class CrudWritingServiceImpl implements CrudWritingService {
         return null;
     }
 }
+
