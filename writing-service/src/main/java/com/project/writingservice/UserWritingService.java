@@ -13,7 +13,7 @@ public interface UserWritingService {
 
     DetailRecord getUserAnswer(String id);
 
-    List<UserSimpleRecord> getAllUserHistoryRecords(String userId);
+    List<UserSimpleRecord> getAllUserHistoryRecords();
 
-    WritingSummary getWritingSummary(String userId);
+    WritingSummary getWritingSummary();
 }

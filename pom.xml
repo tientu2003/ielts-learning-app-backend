@@ -103,5 +103,6 @@
     <module>cloud-config</module>
     <module>listening-service</module>
     <module>writing-service</module>
+    <module>speaking-service</module>
   </modules>
 </project>
