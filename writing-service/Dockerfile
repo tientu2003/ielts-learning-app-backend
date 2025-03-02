@@ -1,7 +1,7 @@
 FROM openjdk:25-oraclelinux9
 
 WORKDIR /app
-COPY target/*.jar /app/reading-service.jar
+COPY target/*.jar /app/writing-service.jar
 
 # Define build-time variables
 ARG SPRING_DATA_MONGODB_URI
