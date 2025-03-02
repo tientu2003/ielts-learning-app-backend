@@ -1,16 +1,25 @@
 package com.project.writingservice.internal.entity;
 
+import com.project.writingservice.external.data.WritingExam;
+import com.project.writingservice.external.user.DetailRecord;
+import com.project.writingservice.external.user.UserAnswer;
+import com.project.writingservice.external.user.UserSimpleRecord;
+import com.project.writingservice.internal.util.WritingScore;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.util.Date;
 
 @Data
 @Document("writing_user")
+@AllArgsConstructor
+@NoArgsConstructor
 public class MongoUserWritingRecord {
-    @MongoId
+    @Id
     private String id;
 
     @Field(name = "user_id")
@@ -26,8 +35,38 @@ public class MongoUserWritingRecord {
     private String duration;
 
     @Field(name = "score")
-    private Double score;
+    private WritingScore score;
 
-    @Field(name = "context")
-    private String context;
+    @Field(name = "answer")
+    private String answer;
+
+    public MongoUserWritingRecord(UserAnswer userAnswer, WritingScore score) {
+        this.userId = userAnswer.getUserId();
+        this.answer = userAnswer.getAnswer();
+        this.examId = userAnswer.getExamId();
+        this.createAt = userAnswer.getCreatedAt();
+        this.duration = userAnswer.getDuration();
+        this.score = score;
+    }
+
+    public DetailRecord toDetailRecord(WritingExam writingExam) {
+        return DetailRecord.builder()
+                .context(writingExam.getContext())
+                .diagram_url(writingExam.getDiagram_url())
+                .task(writingExam.getTask())
+                .finalScore(this.score.getFinalScore())
+                .scores(this.score)
+                .duration(this.duration)
+                .userAnswer(this.answer)
+                .build();
+    }
+
+    public UserSimpleRecord toSimpleRecord(String name) {
+        return UserSimpleRecord.builder()
+                .id(this.id)
+                .name(name)
+                .date(this.createAt)
+                .score(this.score.getFinalScore())
+                .build();
+    }
 }

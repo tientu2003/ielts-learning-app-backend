@@ -36,7 +36,7 @@ public class CrudListeningServiceImpl implements CrudListeningService {
 
     @Override
     public List<IdName> listAllListeningExams() {
-        return listeningExamRepository.getAllIdNames().stream().map(MongoIdName::toIdName).collect(Collectors.toList());
+        return listeningExamRepository.getAllIdNames().parallelStream().map(MongoIdName::toIdName).collect(Collectors.toList());
     }
 
 

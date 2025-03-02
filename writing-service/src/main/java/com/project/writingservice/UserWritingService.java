@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface UserWritingService {
 
-    void createUserAnswer(UserAnswer userAnswer);
+    String createUserAnswer(UserAnswer userAnswer);
 
     DetailRecord getUserAnswer(String id);
 
