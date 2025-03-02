@@ -11,6 +11,7 @@ public class DetailRecord {
     private String context;
     private String diagram_url;
     private String userAnswer;
+    private String duration;
     private WritingScore scores;
-    private Double finalScoreScore;
+    private Double finalScore;
 }

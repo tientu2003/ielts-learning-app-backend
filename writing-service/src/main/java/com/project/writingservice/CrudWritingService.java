@@ -10,5 +10,7 @@ public interface CrudWritingService {
     List<IdName> getListAllWritingExams();
 
     WritingExam getWritingExamById(String id);
+
+    IdName getNextWritingExam();
     
 }

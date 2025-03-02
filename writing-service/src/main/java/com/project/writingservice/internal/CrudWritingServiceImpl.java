@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -20,7 +21,7 @@ public class CrudWritingServiceImpl implements CrudWritingService {
 
     @Override
     public List<IdName> getListAllWritingExams() {
-        return writingExamRepository.findAll().stream().map(writingExam ->
+        return writingExamRepository.findAll().parallelStream().map(writingExam ->
                 new IdName(writingExam.getId(),writingExam.getContext())
         ).toList();
     }
@@ -33,6 +34,15 @@ public class CrudWritingServiceImpl implements CrudWritingService {
             return mongoWritingExam.toWritingExam();
         }
         return null;
+    }
+
+    @Override
+    public IdName getNextWritingExam() {
+        // retrieve Id and Name of WritingExam Random from list
+        List<IdName> list = getListAllWritingExams();
+        Random random = new Random();
+        int randomIndex = random.nextInt(list.size());
+        return list.get(randomIndex);
     }
 }
 

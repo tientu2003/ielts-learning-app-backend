@@ -9,11 +9,11 @@ import java.util.List;
 
 public interface UserWritingService {
 
-    void createUserAnswer(UserAnswer userAnswer);
+    String createUserAnswer(UserAnswer userAnswer);
 
     DetailRecord getUserAnswer(String id);
 
-    List<UserSimpleRecord> getAllUserHistoryRecords();
+    List<UserSimpleRecord> getAllUserHistoryRecords(String userId);
 
-    WritingSummary getWritingSummary();
+    WritingSummary getWritingSummary(String userId);
 }

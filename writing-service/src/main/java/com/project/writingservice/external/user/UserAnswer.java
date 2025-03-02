@@ -9,6 +9,7 @@ import java.util.Date;
 @Data
 @Builder
 public class UserAnswer {
+    private String userId;
     private String examId;
     private String answer;
     @JsonFormat(pattern = "dd/MM/yyyy")
