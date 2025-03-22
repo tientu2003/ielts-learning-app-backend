@@ -70,7 +70,7 @@ public class UserWritingServiceImpl implements UserWritingService {
     public WritingSummary getWritingSummary(String userId) {
         List<MongoUserWritingRecord> list = userWritingRecordRepository.findByUserIdLike(userId);
         Double averageScore = list.stream().mapToDouble(e -> e.getScore().getFinalScore()).average().orElse(0.0);
-        IdName nextExam = crudWritingService.getNextWritingExam();
+        IdName nextExam = crudWritingService.getNextWritingExam(userId);
         return WritingSummary.builder()
                 .averageScore(averageScore)
                 .totalTime("NOT FINISH!!") // TODO

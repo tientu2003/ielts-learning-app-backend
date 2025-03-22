@@ -37,7 +37,7 @@ public class CrudWritingServiceImpl implements CrudWritingService {
     }
 
     @Override
-    public IdName getNextWritingExam() {
+    public IdName getNextWritingExam(String userId) {
         // retrieve Id and Name of WritingExam Random from list
         List<IdName> list = getListAllWritingExams();
         Random random = new Random();
