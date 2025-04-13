@@ -77,7 +77,7 @@ jobs:
             --max-replicas 1 \
             --ingress external \
             --target-port 8085 \
-            --env-vars  SPRING_DATA_URL=${{ secrets.SPRING_DATA_URL }} \
+            --env-vars SPRING_DATA_URL=${{ secrets.SPRING_DATA_URL }} \
                  SPRING_DATA_USER_NAME=${{ secrets.SPRING_DATA_USER_NAME }} \ 
                  SPRING_DATA_PASSWORD=${{ secrets.SPRING_DATA_PASSWORD }} \ 
                  RESOURCESERVER_JWT_JWK_SET_URI=${{ secrets.RESOURCESERVER_JWT_JWK_SET_URI }} \
