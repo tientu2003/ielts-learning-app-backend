@@ -5,10 +5,10 @@ import com.project.accountservice.external.TargetType;
 import com.project.accountservice.external.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -33,37 +33,22 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account updateAccountTheTargetBand(TargetType type, String newBand) {
         String userId = userService.getUserId();
-        switch (type){
+        return switch (type){
             case AVERAGE -> accountRepository.updateTargetBandById(newBand, userId);
             case READ -> accountRepository.updateReadingBandById(newBand, userId);
             case LISTEN -> accountRepository.updateListeningBandById(newBand, userId);
             case WRITE -> accountRepository.updateWritingBandById(newBand, userId);
             case SPEAK -> accountRepository.updateSpeakingBandById(newBand, userId);
-        }
-        return accountRepository.findById(userId).orElse(null);
+        };
     }
 
     @Override
     public Account updateDateOfBirth(Date dateOfBirth) {
-        Optional<Account> optionalAccount = accountRepository.findById(userService.getUserId());
-        if(optionalAccount.isPresent()){
-            Account account = optionalAccount.get();
-            account.setDateOfBirth(dateOfBirth);
-            return accountRepository.save(account);
-        } else {
-            return null;
-        }
+        return accountRepository.updateDateOfBirthById(dateOfBirth, userService.getUserId());
     }
 
     @Override
     public Account updateTimeTarget(Date dateOfTarget) {
-        Optional<Account> optionalAccount = accountRepository.findById(userService.getUserId());
-        if(optionalAccount.isPresent()){
-            Account account = optionalAccount.get();
-            account.setTimeTarget(dateOfTarget);
-            return accountRepository.save(account);
-        } else {
-            return null;
-        }
+        return accountRepository.updateDateTargetById(dateOfTarget, userService.getUserId());
     }
 }

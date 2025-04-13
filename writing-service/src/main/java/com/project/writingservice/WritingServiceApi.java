@@ -50,18 +50,18 @@ public class WritingServiceApi {
         return ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/history/{id}")
-    public ResponseEntity<List<UserSimpleRecord>> getHistory(@PathVariable String id) {
-        List<UserSimpleRecord> list = userWritingService.getAllUserHistoryRecords(id);
+    @GetMapping("/history")
+    public ResponseEntity<List<UserSimpleRecord>> getHistory() {
+        List<UserSimpleRecord> list = userWritingService.getAllUserHistoryRecords();
         if(list != null && !list.isEmpty()) {
             return ResponseEntity.ok(list);
         }
         return ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/summary/{id}")
-    public ResponseEntity<WritingSummary> getWritingSummary(@PathVariable String id) {
-        WritingSummary result = userWritingService.getWritingSummary(id);
+    @GetMapping("/summary")
+    public ResponseEntity<WritingSummary> getWritingSummary() {
+        WritingSummary result = userWritingService.getWritingSummary();
         if (result != null) {
             return ResponseEntity.ok(result);
         }

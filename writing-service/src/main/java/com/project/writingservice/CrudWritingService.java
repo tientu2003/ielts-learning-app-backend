@@ -11,6 +11,6 @@ public interface CrudWritingService {
 
     WritingExam getWritingExamById(String id);
 
-    IdName getNextWritingExam(String userId);
+    IdName getNextWritingExam();
     
 }

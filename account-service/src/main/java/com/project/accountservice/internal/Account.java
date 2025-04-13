@@ -1,5 +1,6 @@
 package com.project.accountservice.internal;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,10 +20,11 @@ public class Account {
     @Column(name = "USER_NAME", nullable = false)
     private String userName;
 
+    @JsonFormat(pattern = "dd-MM-yyyy")
     @Column(name = "DATE_OF_BIRTH")
     private Date dateOfBirth;
 
-    @Column(name = "TIME_TARGET")
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private Date timeTarget;
 
     @Column(name = "TARGET_BAND")

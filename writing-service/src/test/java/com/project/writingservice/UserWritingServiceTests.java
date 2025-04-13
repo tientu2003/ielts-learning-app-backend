@@ -31,7 +31,7 @@ public class UserWritingServiceTests {
 
         userWritingService.createUserAnswer(userAnswer);
 
-        List<UserSimpleRecord> list = userWritingService.getAllUserHistoryRecords("Temp");
+        List<UserSimpleRecord> list = userWritingService.getAllUserHistoryRecords();
 
         assertNotNull(list);
 
@@ -52,7 +52,7 @@ public class UserWritingServiceTests {
     @Test
     @Disabled
     void getSummary(){
-       WritingSummary actual = userWritingService.getWritingSummary("Temp");
+       WritingSummary actual = userWritingService.getWritingSummary();
        assertNotNull(actual);
 
        assertEquals(7.5,actual.getAverageScore());

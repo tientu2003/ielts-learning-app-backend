@@ -2,6 +2,7 @@ package com.project.writingservice.internal;
 
 import com.project.writingservice.CrudWritingService;
 import com.project.writingservice.UserWritingService;
+import com.project.writingservice.external.UserService;
 import com.project.writingservice.external.data.IdName;
 import com.project.writingservice.external.data.WritingExam;
 import com.project.writingservice.external.user.DetailRecord;
@@ -25,6 +26,7 @@ public class UserWritingServiceImpl implements UserWritingService {
 
     private final UserWritingRecordRepository userWritingRecordRepository;
 
+    private final UserService userService;
 
     private final ScoringService scoringService;
 
@@ -40,7 +42,8 @@ public class UserWritingServiceImpl implements UserWritingService {
                 } else {
                     writingScore = scoringService.getWritingScoreTask2(exam.getContext(), userAnswer.getAnswer());
                 }
-                MongoUserWritingRecord newRecord = userWritingRecordRepository.save(new MongoUserWritingRecord(userAnswer, writingScore));
+                MongoUserWritingRecord newRecord = userWritingRecordRepository.save(new MongoUserWritingRecord(userAnswer,
+                        writingScore, userService.getUserId()));
                 return newRecord.getId();
             })
             .orElse(null); // Return null if the exam is not found
@@ -59,18 +62,19 @@ public class UserWritingServiceImpl implements UserWritingService {
     }
 
     @Override
-    public List<UserSimpleRecord> getAllUserHistoryRecords(String userId) {
-        return userWritingRecordRepository.findByUserIdLike(userId).parallelStream().map(e -> {
+    public List<UserSimpleRecord> getAllUserHistoryRecords() {
+        return userWritingRecordRepository.findByUserIdLike(userService.getUserId()).parallelStream().map(e -> {
 //            String name =  writingExamRepository.getNameById(e.getExamId());
             return e.toSimpleRecord("Test name"); // TODO missing name
         }).toList();
     }
 
     @Override
-    public WritingSummary getWritingSummary(String userId) {
+    public WritingSummary getWritingSummary() {
+        String userId = userService.getUserId();
         List<MongoUserWritingRecord> list = userWritingRecordRepository.findByUserIdLike(userId);
         Double averageScore = list.stream().mapToDouble(e -> e.getScore().getFinalScore()).average().orElse(0.0);
-        IdName nextExam = crudWritingService.getNextWritingExam(userId);
+        IdName nextExam = crudWritingService.getNextWritingExam();
         return WritingSummary.builder()
                 .averageScore(averageScore)
                 .totalTime("NOT FINISH!!") // TODO

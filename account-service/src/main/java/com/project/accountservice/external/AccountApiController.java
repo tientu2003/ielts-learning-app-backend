@@ -4,6 +4,7 @@ import com.project.accountservice.AccountService;
 import com.project.accountservice.internal.Account;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -46,12 +47,12 @@ public class AccountApiController {
 
 
     @PatchMapping("/bod")
-    public ResponseEntity<Account> updateAccountDateOfBirth(@RequestParam("date") Date dateOfBirth) {
+    public ResponseEntity<Account> updateAccountDateOfBirth(@RequestParam(value = "date") @DateTimeFormat(pattern = "yyyy-MM-dd")  Date dateOfBirth) {
         return ResponseEntity.ok(accountService.updateDateOfBirth(dateOfBirth));
     }
 
     @PatchMapping("/time-target")
-    public ResponseEntity<Account> updateAccountTimeTarget(@RequestParam("date") Date dateOfTarget) {
+    public ResponseEntity<Account> updateAccountTimeTarget(@RequestParam(value = "date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date dateOfTarget) {
         return ResponseEntity.ok(accountService.updateTimeTarget(dateOfTarget));
 
     }
