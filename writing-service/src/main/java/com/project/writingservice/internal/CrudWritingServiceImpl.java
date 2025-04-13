@@ -1,11 +1,11 @@
 package com.project.writingservice.internal;
 
 import com.project.writingservice.CrudWritingService;
+import com.project.writingservice.external.UserService;
 import com.project.writingservice.external.data.IdName;
 import com.project.writingservice.external.data.WritingExam;
 import com.project.writingservice.internal.entity.MongoWritingExam;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +18,7 @@ import java.util.Random;
 public class CrudWritingServiceImpl implements CrudWritingService {
 
     private final WritingExamRepository writingExamRepository;
+    private final UserService userService;
 
     @Override
     public List<IdName> getListAllWritingExams() {

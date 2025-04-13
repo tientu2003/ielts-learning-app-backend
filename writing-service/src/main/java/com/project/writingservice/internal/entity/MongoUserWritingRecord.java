@@ -1,5 +1,6 @@
 package com.project.writingservice.internal.entity;
 
+import com.project.writingservice.external.UserService;
 import com.project.writingservice.external.data.WritingExam;
 import com.project.writingservice.external.user.DetailRecord;
 import com.project.writingservice.external.user.UserAnswer;
@@ -40,8 +41,8 @@ public class MongoUserWritingRecord {
     @Field(name = "answer")
     private String answer;
 
-    public MongoUserWritingRecord(UserAnswer userAnswer, WritingScore score) {
-        this.userId = userAnswer.getUserId();
+    public MongoUserWritingRecord(UserAnswer userAnswer, WritingScore score, String userId) {
+        this.userId = userId;
         this.answer = userAnswer.getAnswer();
         this.examId = userAnswer.getExamId();
         this.createAt = userAnswer.getCreatedAt();

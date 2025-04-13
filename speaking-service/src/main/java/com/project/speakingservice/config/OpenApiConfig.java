@@ -12,7 +12,7 @@ public class OpenApiConfig {
     public OpenAPI openAPI() {
         return new OpenAPI()
                 .info(new Info().title("Speaking Service")
-                        .description("This is Rest API for Reading Service")
+                        .description("This is Rest API for Speaking Service")
                         .version("v0.1")
                         .license(new License().name("Apache 2.0"))
                 );

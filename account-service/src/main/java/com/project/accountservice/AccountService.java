@@ -1,23 +1,21 @@
 package com.project.accountservice;
 
+import com.project.accountservice.external.TargetType;
 import com.project.accountservice.internal.Account;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
+import java.util.Date;
 
 @Service
 public interface AccountService {
 
-    Account findById(UUID id);
+    Account findById();
 
-    Account findAccountByUserName(String userName);
+    String createAccountInfor(Account account);
 
-    @Transactional
-    Account createAccount(String userName, String password);
+    Account updateAccountTheTargetBand(TargetType type, String newBand);
 
-    @Transactional
-    Account changePassword(Account account,String newPassword);
+    Account updateDateOfBirth(Date dateOfBirth);
 
-    boolean checkAuthentication(String userName, String password);
+    Account updateTimeTarget(Date dateOfTarget);
 }
