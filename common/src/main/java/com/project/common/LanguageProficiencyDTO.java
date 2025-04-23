@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class LanguageProficiencyDTO {
-    private String topic;
+    private Topic topic;
     private Double tpi;
     private Double tci;
 }

@@ -1,10 +1,10 @@
 package com.project.listeningservice;
 
 import com.project.common.dto.BasicUserRecordDTO;
+import com.project.common.dto.UserSummary;
 import com.project.listeningservice.external.data.ListeningAnswer;
 import com.project.listeningservice.external.data.ListeningExam;
 import com.project.listeningservice.external.user.DetailRecord;
-import com.project.listeningservice.external.user.ListeningSummary;
 import com.project.listeningservice.external.user.UserAnswer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,8 +25,8 @@ public class ListeningServiceApi {
     final UserListeningService userListeningService;
 
     @GetMapping("/user/summary")
-    public ResponseEntity<ListeningSummary> getSummary() {
-        ListeningSummary data = userListeningService.getListeningScore();
+    public ResponseEntity<UserSummary> getSummary() {
+        UserSummary data = userListeningService.getListeningScore();
         return ResponseEntity.ok(data);
     }
 

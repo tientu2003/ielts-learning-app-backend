@@ -1,10 +1,9 @@
 package com.project.listeningservice;
 
 import com.project.common.dto.BasicUserRecordDTO;
+import com.project.common.dto.UserSummary;
 import com.project.listeningservice.external.user.DetailRecord;
-import com.project.listeningservice.external.user.ListeningSummary;
 import com.project.listeningservice.external.user.UserAnswer;
-
 
 import java.util.List;
 
@@ -17,5 +16,5 @@ public interface UserListeningService {
 
     DetailRecord getListeningDetailRecord(String recordId);
 
-    ListeningSummary getListeningScore();
+    UserSummary getListeningScore();
 }

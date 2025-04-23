@@ -1,12 +1,12 @@
 package com.project.readingservice;
 
 import com.project.common.dto.BasicUserRecordDTO;
+import com.project.common.dto.UserSummary;
 import com.project.readingservice.external.data.AnswerData;
 import com.project.readingservice.external.data.NewReadingTest;
-import com.project.readingservice.external.errors.ReadingTestAlreadyExistsException;
 import com.project.readingservice.external.data.ReadingTestData;
+import com.project.readingservice.external.errors.ReadingTestAlreadyExistsException;
 import com.project.readingservice.external.user.DetailReadingTestRecord;
-import com.project.readingservice.external.user.GeneralAssessment;
 import com.project.readingservice.external.user.UserAnswer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,8 +28,8 @@ public class ReadingServiceApi {
     final UserReadingService userReadingService;
 
     @GetMapping("/user/review")
-    public ResponseEntity<GeneralAssessment> getGeneralAssessment() {
-        GeneralAssessment data = userReadingService.getReadingGeneralAssessment();
+    public ResponseEntity<UserSummary> getGeneralAssessment() {
+        UserSummary data = userReadingService.getReadingGeneralAssessment();
         return ResponseEntity.ok(data);
     }
 

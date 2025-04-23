@@ -1,5 +1,7 @@
 package com.project.readingservice.internal;
 
+import com.project.common.Topic;
+import com.project.common.TopicProficiency;
 import com.project.common.dto.BasicUserRecordDTO;
 import com.project.readingservice.internal.model.user.UserAnswerHistory;
 import org.springframework.data.mongodb.repository.Aggregation;
@@ -22,4 +24,20 @@ public interface UserReadingRepository extends MongoRepository<UserAnswerHistory
                     "date: '$createdAt', topics: { $map: { input: '$topicProficiency', as: 'topic', in: '$$topic.topic' } } } }"
     })
     List<BasicUserRecordDTO> findAllByUserIdWithTestName(String userId);
+
+
+    @Aggregation(pipeline = {
+            "{ $match: { userId: ?0, 'topicProficiency.topic': ?1 } }",
+            "{ $unwind: '$topicProficiency' }",
+            "{ $match: { 'topicProficiency.topic': ?1 } }",
+            "{ $replaceRoot: { newRoot: '$topicProficiency' } }"
+    })
+    List<TopicProficiency> findAllTopicProficiencyByUserIdAndTopic(String userId, Topic topic);
+
+    @Aggregation(pipeline = {
+            "{ $match: { userId: ?0 } }",
+            "{ $group: { _id: null, averageScore: { $avg: '$score' } } }",
+            "{ $project: { _id: 0, averageScore: 1 } }"
+    })
+    Double calculateAverageScoreByUserId(String userId);
 }

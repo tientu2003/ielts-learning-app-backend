@@ -2,13 +2,15 @@ package com.project.listeningservice.internal;
 
 import com.project.common.LanguageProficiencyDTO;
 import com.project.common.LanguageProficiencyService;
+import com.project.common.Topic;
+import com.project.common.TopicProficiency;
 import com.project.common.dto.BasicExamDTO;
 import com.project.common.dto.BasicUserRecordDTO;
+import com.project.common.dto.UserSummary;
 import com.project.listeningservice.CrudListeningService;
 import com.project.listeningservice.UserListeningService;
 import com.project.listeningservice.external.data.ListeningAnswer;
 import com.project.listeningservice.external.user.DetailRecord;
-import com.project.listeningservice.external.user.ListeningSummary;
 import com.project.listeningservice.external.user.UserAnswer;
 import com.project.listeningservice.external.util.ListeningScore;
 import com.project.listeningservice.external.util.UserService;
@@ -83,19 +85,16 @@ public class UserListeningServiceImpl extends LanguageProficiencyService impleme
     }
 
     @Override
-    public ListeningSummary getListeningScore() {
+    public UserSummary getListeningScore() {
         String userId = userService.getUserId();
-        List<MongoUserHistory> records = userListeningRepository.findAllByUserIdLike(userId);
-        List<BasicExamDTO> exams = crudListeningService.listAllListeningExams();
-        double averageScore = records.stream()
-                .mapToDouble(MongoUserHistory::getScore)
-                .average()
-                .orElse(0.0); // Default to 0.0 if no scores
+        Double averageScore = userListeningRepository.calculateAverageScoreByUserId(userId);
 
+        // TODO do the personal and next suggestion here
+        List<BasicExamDTO> exams = crudListeningService.listAllListeningExams();
         // Select a random exam for next test ID and name1
         BasicExamDTO nextTest = exams.isEmpty() ? null : exams.get(new Random().nextInt(exams.size()));
 
-        return ListeningSummary.builder()
+        return UserSummary.builder()
                 .userId(userId)
                 .averageScore(averageScore)
                 .nextTestId(nextTest != null ? nextTest.getId() : null)
@@ -103,10 +102,22 @@ public class UserListeningServiceImpl extends LanguageProficiencyService impleme
                 .build();
     }
 
+    @Override
     public List<LanguageProficiencyDTO> getAllTopicProficiencyIndexs(){
+        List<Topic> topics = userListeningRepository.findDistinctTopicsByUserId(userService.getUserId());
+        return topics.stream().map(this::getTopicProficiencyDTO).toList();
+    }
 
-
-        return List.of();
+    private LanguageProficiencyDTO getTopicProficiencyDTO(Topic topic) {
+        String userId = userService.getUserId();
+        List<TopicProficiency> topicProficiencies = userListeningRepository.findAllTopicProficiencyByUserIdAndTopic(userId, topic);
+        if(topicProficiencies.isEmpty()) return null;
+        Double tpi = topicProficiencyIndexCalculator(topicProficiencies);
+        return LanguageProficiencyDTO.builder()
+                .topic(topic)
+                .tpi(tpi)
+                .tci(topicConsistencyIndexCalculator(topicProficiencies,tpi))
+                .build();
     }
 }
 

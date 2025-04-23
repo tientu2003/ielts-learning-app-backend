@@ -1,11 +1,12 @@
 package com.project.readingservice.internal;
 
+import com.project.common.dto.BasicExamDTO;
 import com.project.common.dto.BasicUserRecordDTO;
+import com.project.common.dto.UserSummary;
 import com.project.readingservice.CRUDReadingService;
 import com.project.readingservice.UserReadingService;
 import com.project.readingservice.external.data.AnswerData;
 import com.project.readingservice.external.user.DetailReadingTestRecord;
-import com.project.readingservice.external.user.GeneralAssessment;
 import com.project.readingservice.external.user.UserAnswer;
 import com.project.readingservice.external.util.ReadingScore;
 import com.project.readingservice.external.util.UserService;
@@ -16,9 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Slf4j
 @Service
@@ -83,28 +84,20 @@ public class UserReadingServiceImp implements UserReadingService {
     }
 
     @Override
-    public GeneralAssessment getReadingGeneralAssessment() {
+    public UserSummary getReadingGeneralAssessment() {
         String userId = userService.getUserId();
 
-        List<UserAnswerHistory> AllRecord = userReadingRepository.findAllByUserIdLike(userId);
-        List<GeneralAssessment.Score> allScore = new ArrayList<>();
+        Double averageScore = userReadingRepository.calculateAverageScoreByUserId(userId);
 
-        double totalScore = 0.0;
+        // TODO do the personal and next suggestion here
+        List<BasicExamDTO> exams = crudReadingService.listAllReadingTestName();
+        BasicExamDTO nextTest = exams.isEmpty() ? null : exams.get(new Random().nextInt(exams.size()));
 
-        for (UserAnswerHistory record : AllRecord) {
-            allScore.add(GeneralAssessment.Score.builder()
-                            .score(record.getScore())
-                            .timestamp(record.getCreatedAt())
-                            .build());
-            totalScore = totalScore + record.getScore();
-        }
-
-        return GeneralAssessment.builder()
+        return UserSummary.builder()
             .userId(userId)
-            .averageScore(totalScore/AllRecord.size())
-            .allScores(allScore)
-            .personalRecommendation(null)
-            .nextTestId(null)
+            .averageScore(averageScore)
+            .nextTestId(nextTest != null ? nextTest.getId() : null)
+            .testName(nextTest != null ? nextTest.getTestName() : null)
             .build();
     }
 

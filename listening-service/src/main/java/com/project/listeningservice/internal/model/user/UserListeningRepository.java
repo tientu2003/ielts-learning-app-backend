@@ -1,5 +1,7 @@
 package com.project.listeningservice.internal.model.user;
 
+import com.project.common.Topic;
+import com.project.common.TopicProficiency;
 import com.project.common.dto.BasicUserRecordDTO;
 import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -20,4 +22,27 @@ public interface UserListeningRepository extends MongoRepository<MongoUserHistor
     })
     List<BasicUserRecordDTO> findAllByUserIdWithTestName(String userId);
 
+
+    @Aggregation(pipeline = {
+            "{ $match: { userId: ?0 } }",
+            "{ $unwind: '$topicProficiency' }",
+            "{ $group: { _id: '$topicProficiency.topic' } }",
+            "{ $replaceRoot: { newRoot: '$_id' } }"
+    })
+    List<Topic> findDistinctTopicsByUserId(String userId);
+
+    @Aggregation(pipeline = {
+            "{ $match: { userId: ?0, 'topicProficiency.topic': ?1 } }",
+            "{ $unwind: '$topicProficiency' }",
+            "{ $match: { 'topicProficiency.topic': ?1 } }",
+            "{ $replaceRoot: { newRoot: '$topicProficiency' } }"
+    })
+    List<TopicProficiency> findAllTopicProficiencyByUserIdAndTopic(String userId, Topic topic);
+
+    @Aggregation(pipeline = {
+            "{ $match: { userId: ?0 } }",
+            "{ $group: { _id: null, averageScore: { $avg: '$score' } } }",
+            "{ $project: { _id: 0, averageScore: 1 } }"
+    })
+    Double calculateAverageScoreByUserId(String userId);
 }
