@@ -1,19 +1,24 @@
 package com.project.listeningservice.internal;
 
+import com.project.common.LanguageProficiencyDTO;
+import com.project.common.LanguageProficiencyService;
+import com.project.common.dto.BasicExamDTO;
 import com.project.listeningservice.CrudListeningService;
 import com.project.listeningservice.UserListeningService;
-import com.project.listeningservice.external.data.IdName;
 import com.project.listeningservice.external.data.ListeningAnswer;
 import com.project.listeningservice.external.user.DetailRecord;
 import com.project.listeningservice.external.user.ListeningSummary;
 import com.project.listeningservice.external.user.UserAnswer;
 import com.project.listeningservice.external.user.UserSimpleRecord;
 import com.project.listeningservice.external.util.ListeningScore;
+import com.project.listeningservice.external.util.UserService;
 import com.project.listeningservice.internal.model.data.ListeningExamRepository;
 import com.project.listeningservice.internal.model.data.MongoListeningExam;
 import com.project.listeningservice.internal.model.user.MongoUserHistory;
 import com.project.listeningservice.internal.model.user.UserListeningRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +29,8 @@ import java.util.Random;
 
 @Slf4j
 @Service
-public class UserListeningServiceImpl implements UserListeningService {
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+public class UserListeningServiceImpl extends LanguageProficiencyService implements UserListeningService {
 
     final UserListeningRepository userListeningRepository;
 
@@ -34,21 +40,14 @@ public class UserListeningServiceImpl implements UserListeningService {
 
     final ListeningExamRepository listeningExamRepository;
 
-    public UserListeningServiceImpl(UserListeningRepository userListeningRepository,
-                                    ListeningScore listeningScore,
-                                    CrudListeningService crudListeningService,
-                                    ListeningExamRepository listeningExamRepository) {
-        this.userListeningRepository = userListeningRepository;
-        this.listeningScore = listeningScore;
-        this.crudListeningService = crudListeningService;
-        this.listeningExamRepository = listeningExamRepository;
-    }
+    final UserService userService;
 
     @Override
     @Transactional
-    public String createUserAnswer(UserAnswer userAnswer, String userId) {
-        List<String> testAnswer = crudListeningService.getListeningAnswer(userAnswer.getTestId()).getAnswers();
-        List<Boolean> check = listeningScore.checkAnswerAndCalculateScore(userAnswer.getAnswers(), testAnswer);
+    public String createUserAnswer(UserAnswer userAnswer) {
+        String userId = userService.getUserId();
+        ListeningAnswer listeningAnswer = crudListeningService.getListeningAnswer(userAnswer.getTestId());
+        List<Boolean> check = listeningScore.checkAnswerAndCalculateScore(userAnswer.getAnswers(), listeningAnswer.getAnswers());
         int count = 0;
         for (Boolean aBoolean : check) {
             if (aBoolean) {
@@ -56,13 +55,14 @@ public class UserListeningServiceImpl implements UserListeningService {
             }
         }
         MongoUserHistory newOne = userListeningRepository.insert(new MongoUserHistory(userAnswer,
-                userId, check, listeningScore.getScore(count)));
+                userId, check, listeningScore.getScore(count), listeningAnswer.getNumberQuestions()));
         log.info("User {} save user answer data", userId);
         return newOne.getId();
     }
 
     @Override
-    public List<UserSimpleRecord> listAllListeningHistory(String userId) {
+    public List<UserSimpleRecord> listAllListeningHistory() {
+        String userId = userService.getUserId();
         List<MongoUserHistory> records = userListeningRepository.findAllByUserIdLike(userId);
         return records.stream().map(
                 data -> {
@@ -86,16 +86,17 @@ public class UserListeningServiceImpl implements UserListeningService {
     }
 
     @Override
-    public ListeningSummary getListeningScore(String userId) {
+    public ListeningSummary getListeningScore() {
+        String userId = userService.getUserId();
         List<MongoUserHistory> records = userListeningRepository.findAllByUserIdLike(userId);
-        List<IdName> exams = crudListeningService.listAllListeningExams();
+        List<BasicExamDTO> exams = crudListeningService.listAllListeningExams();
         double averageScore = records.stream()
                 .mapToDouble(MongoUserHistory::getScore)
                 .average()
                 .orElse(0.0); // Default to 0.0 if no scores
 
         // Select a random exam for next test ID and name1
-        IdName nextTest = exams.isEmpty() ? null : exams.get(new Random().nextInt(exams.size()));
+        BasicExamDTO nextTest = exams.isEmpty() ? null : exams.get(new Random().nextInt(exams.size()));
 
         return ListeningSummary.builder()
                 .userId(userId)
@@ -105,5 +106,10 @@ public class UserListeningServiceImpl implements UserListeningService {
                 .build();
     }
 
+    public List<LanguageProficiencyDTO> getAllTopicProficiencyIndexs(){
+
+
+        return List.of();
+    }
 }
 

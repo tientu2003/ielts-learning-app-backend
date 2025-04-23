@@ -15,7 +15,7 @@ public class DetailReadingTestRecord {
 
     private String id;
 
-    private UUID userId;
+    private String userId;
 
     private List<Result> userAnswers;
 

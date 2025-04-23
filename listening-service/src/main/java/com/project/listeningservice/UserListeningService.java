@@ -11,11 +11,11 @@ import java.util.List;
 
 public interface UserListeningService {
 
-    String createUserAnswer(UserAnswer userAnswer, String userId);
+    String createUserAnswer(UserAnswer userAnswer);
 
-    List<UserSimpleRecord> listAllListeningHistory(String userId);
+    List<UserSimpleRecord> listAllListeningHistory();
 
     DetailRecord getListeningDetailRecord(String recordId);
 
-    ListeningSummary getListeningScore(String userId);
+    ListeningSummary getListeningScore();
 }

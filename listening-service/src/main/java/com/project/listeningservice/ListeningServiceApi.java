@@ -26,15 +26,15 @@ public class ListeningServiceApi {
         this.userListeningService = userListeningService;
     }
 
-    @GetMapping("/user/{id}/summary")
-    public ResponseEntity<ListeningSummary> getSummary(@PathVariable("id") String id) {
-        ListeningSummary data = userListeningService.getListeningScore(id);
+    @GetMapping("/user/summary")
+    public ResponseEntity<ListeningSummary> getSummary() {
+        ListeningSummary data = userListeningService.getListeningScore();
         return ResponseEntity.ok(data);
     }
 
-    @GetMapping("/user/{id}/answer")
-    public ResponseEntity<List<UserSimpleRecord>> getAllListeningRecords(@PathVariable("id") String id) {
-        List<UserSimpleRecord> data = userListeningService.listAllListeningHistory(id);
+    @GetMapping("/user/answer")
+    public ResponseEntity<List<UserSimpleRecord>> getAllListeningRecords() {
+        List<UserSimpleRecord> data = userListeningService.listAllListeningHistory();
         if(data.isEmpty()) {
             return ResponseEntity.noContent().build();
         }else{
@@ -42,9 +42,9 @@ public class ListeningServiceApi {
         }
     }
 
-    @PostMapping("/user/{id}/answer")
-    public ResponseEntity<String> sendUserAnswer(@PathVariable("id") String userId, @RequestBody UserAnswer userAnswer) {
-        String received =  userListeningService.createUserAnswer(userAnswer,userId);
+    @PostMapping("/user/answer")
+    public ResponseEntity<String> sendUserAnswer(@RequestBody UserAnswer userAnswer) {
+        String received =  userListeningService.createUserAnswer(userAnswer);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequestUri()
                 .path("/{record-id}")
@@ -54,9 +54,8 @@ public class ListeningServiceApi {
         return ResponseEntity.created(location).body(received);
     }
 
-    @GetMapping("/user/{id}/answer/{record_id}")
-    public ResponseEntity<DetailRecord> getDetailListeningAnswerRecord(@PathVariable("id") String userId,
-                                                                     @PathVariable("record_id") String record_id) {
+    @GetMapping("/user/answer/{record_id}")
+    public ResponseEntity<DetailRecord> getDetailListeningAnswerRecord( @PathVariable("record_id") String record_id) {
         DetailRecord result = userListeningService.getListeningDetailRecord(record_id);
         if(result == null) {
             return ResponseEntity.notFound().build();

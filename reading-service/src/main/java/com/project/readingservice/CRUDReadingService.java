@@ -1,12 +1,13 @@
 package com.project.readingservice;
 
+import com.project.common.dto.BasicExamDTO;
 import com.project.readingservice.external.data.*;
 
 import java.util.List;
 
 public interface CRUDReadingService {
 
-    List<ExamData> listAllReadingTestName();
+    List<BasicExamDTO> listAllReadingTestName();
     
     AnswerData getAnswerTest(String testId);
 

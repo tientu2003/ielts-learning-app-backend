@@ -11,7 +11,7 @@ import java.util.UUID;
 @Builder
 public class GeneralAssessment {
 
-    private UUID userId;
+    private String userId;
 
     private Double averageScore;
 

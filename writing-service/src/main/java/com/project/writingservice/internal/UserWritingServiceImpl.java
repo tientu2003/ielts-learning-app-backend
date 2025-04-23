@@ -2,17 +2,16 @@ package com.project.writingservice.internal;
 
 import com.project.writingservice.CrudWritingService;
 import com.project.writingservice.UserWritingService;
+import com.project.writingservice.external.AiScoringServiceClient;
 import com.project.writingservice.external.UserService;
 import com.project.writingservice.external.data.IdName;
 import com.project.writingservice.external.data.WritingExam;
-import com.project.writingservice.external.user.DetailRecord;
-import com.project.writingservice.external.user.UserAnswer;
-import com.project.writingservice.external.user.UserSimpleRecord;
-import com.project.writingservice.external.user.WritingSummary;
+import com.project.writingservice.external.user.*;
 import com.project.writingservice.internal.entity.MongoUserWritingRecord;
-import com.project.writingservice.internal.util.WritingScore;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +19,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@Slf4j
 public class UserWritingServiceImpl implements UserWritingService {
 
     private final WritingExamRepository writingExamRepository;
@@ -28,26 +28,34 @@ public class UserWritingServiceImpl implements UserWritingService {
 
     private final UserService userService;
 
-    private final ScoringService scoringService;
+    private final AiScoringServiceClient client;
 
     private final CrudWritingService crudWritingService;
 
     @Override
     public String createUserAnswer(UserAnswer userAnswer) {
         return writingExamRepository.findById(userAnswer.getExamId())
-            .map(exam -> {
-                WritingScore writingScore;
-                if (exam.getTask() == 1) {
-                    writingScore = scoringService.getWritingScoreTask1(exam.getContext(), exam.getDiagramUrl(), userAnswer.getAnswer());
-                } else {
-                    writingScore = scoringService.getWritingScoreTask2(exam.getContext(), userAnswer.getAnswer());
-                }
-                MongoUserWritingRecord newRecord = userWritingRecordRepository.save(new MongoUserWritingRecord(userAnswer,
-                        writingScore, userService.getUserId()));
-                return newRecord.getId();
-            })
-            .orElse(null); // Return null if the exam is not found
+                .map(exam -> {
+                    MongoUserWritingRecord newRecord = userWritingRecordRepository.save(new MongoUserWritingRecord(userAnswer, userService.getUserId()));
+                    if (exam.getTask() == 2) {
+                        sendUserAnswerToAi(newRecord.getId(),"Question", List.of("Answer"));
+                    }
+
+                    return newRecord.getId();
+                })
+                .orElse(null); // Return null if the exam is not found
     }
+
+    @Async
+    public void sendUserAnswerToAi(String recordId, String question, List<String> answer ) {
+        AiScoringRequest request = new AiScoringRequest(recordId, question, answer);
+        try{
+            client.evaluateUserAnswer(request);
+        }catch (Exception e){
+            log.error("Ai Scoring Process Failed: {}", e.getMessage());
+        }
+    }
+
 
     @Override
     public DetailRecord getUserAnswer(String id) {

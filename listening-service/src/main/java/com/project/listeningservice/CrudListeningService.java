@@ -1,8 +1,8 @@
 package com.project.listeningservice;
 
+import com.project.common.dto.BasicExamDTO;
 import com.project.listeningservice.external.data.ListeningAnswer;
 import com.project.listeningservice.external.data.ListeningExam;
-import com.project.listeningservice.external.data.IdName;
 
 import java.util.List;
 
@@ -12,6 +12,6 @@ public interface CrudListeningService {
 
     ListeningAnswer getListeningAnswer(String id);
 
-    List<IdName> listAllListeningExams();
+    List<BasicExamDTO> listAllListeningExams();
 
 }
