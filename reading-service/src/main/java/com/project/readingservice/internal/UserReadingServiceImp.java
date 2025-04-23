@@ -1,15 +1,14 @@
 package com.project.readingservice.internal;
 
+import com.project.common.dto.BasicUserRecordDTO;
 import com.project.readingservice.CRUDReadingService;
 import com.project.readingservice.UserReadingService;
 import com.project.readingservice.external.data.AnswerData;
-import com.project.readingservice.external.user.BasicReadingHistory;
 import com.project.readingservice.external.user.DetailReadingTestRecord;
 import com.project.readingservice.external.user.GeneralAssessment;
 import com.project.readingservice.external.user.UserAnswer;
 import com.project.readingservice.external.util.ReadingScore;
 import com.project.readingservice.external.util.UserService;
-import com.project.readingservice.internal.model.data.MongoReadingTest;
 import com.project.readingservice.internal.model.user.UserAnswerHistory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,8 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.IntStream;
 
 @Slf4j
 @Service
@@ -32,8 +29,6 @@ public class UserReadingServiceImp implements UserReadingService {
     final CRUDReadingService crudReadingService;
 
     final UserReadingRepository userReadingRepository;
-
-    final ReadingTestRepository readingTestRepository;
 
     final ReadingScore readingScore;
 
@@ -49,36 +44,32 @@ public class UserReadingServiceImp implements UserReadingService {
 
         List<Boolean> result = readingScore.checkAnswerAndCalculateScore(userAnswer.getAnswers(), testAnswer.getAnswers());
 
-        List<String> tempSuggestions = new ArrayList<>();
-
-        IntStream.range(0, 40).forEach(index ->tempSuggestions.add(""));
-
-
         UserAnswerHistory newOne = userReadingRepository.insert(new UserAnswerHistory(userId,
                 userAnswer,
                 readingScore.getScore(),
-                result,
-                tempSuggestions));
+                result));
 
         return newOne.toDetailReadingTestRecord(testAnswer);
     }
 
     @Override
-    public List<BasicReadingHistory> listUserReadingTestHistory() {
+    public List<BasicUserRecordDTO> listUserReadingTestHistory() {
 
         String userId = userService.getUserId();
 
-        List<UserAnswerHistory> datas = userReadingRepository.findAllByUserIdLike(userId);
+        return userReadingRepository.findAllByUserIdWithTestName(userId);
 
-        return datas.stream().map(
-                data -> {
-                    Optional<MongoReadingTest> returnTest = readingTestRepository.findById(data.getTestId());
-                    return returnTest
-                            .map(mongoReadingTest ->
-                                    data.toBasicReadingHistory(mongoReadingTest.getTestName()))
-                            .orElse(null);
-                }
-        ).toList();
+//        List<UserAnswerHistory> datas = userReadingRepository.findAllByUserIdLike(userId);
+//
+//        return datas.stream().map(
+//                data -> {
+//                    Optional<MongoReadingTest> returnTest = readingTestRepository.findById(data.getTestId());
+//                    return returnTest
+//                            .map(mongoReadingTest ->
+//                                    data.toBasicReadingHistory(mongoReadingTest.getTestName()))
+//                            .orElse(null);
+//                }
+//        ).toList();
     }
 
     @Override

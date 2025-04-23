@@ -10,8 +10,6 @@ import java.util.List;
 public class UserAnswer {
     private String testId;
 
-    private String createdAt;
-
     private String timeTaken;
 
     private List<String> answers;

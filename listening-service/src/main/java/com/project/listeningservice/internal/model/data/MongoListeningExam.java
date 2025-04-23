@@ -1,5 +1,6 @@
 package com.project.listeningservice.internal.model.data;
 
+import com.project.common.Topic;
 import com.project.listeningservice.external.data.ListeningAnswer;
 import com.project.listeningservice.external.data.ListeningExam;
 import lombok.Data;
@@ -21,6 +22,15 @@ public class MongoListeningExam {
 
     @Field(name = "recordings")
     private List<MongoRecording> recordings;
+
+    @Field(name = "topic_1")
+    private Topic topic1;
+    @Field(name = "topic_2")
+    private Topic topic2;
+    @Field(name = "topic_3")
+    private Topic topic3;
+    @Field(name = "topic_4")
+    private Topic topic4;
 
     @Data
     public static class MongoRecording {
@@ -75,12 +85,11 @@ public class MongoListeningExam {
                                 group.getQuestions().stream().map(question -> new ListeningExam.Recording.QuestionGroup.Question(
                                         question.getQuestionNumber(),
                                         question.getQuestionText(),
-                                        question.getAnswerOptions() != null ? question.getAnswerOptions(): null,
+                                        question.getAnswerOptions() != null ? question.getAnswerOptions() : null,
                                         question.getAnswer()
-                                )).collect(Collectors.toList())
-                        )).collect(Collectors.toList())
-                )).collect(Collectors.toList())
-        );
+                                )).toList()
+                        )).toList()
+                )).toList());
     }
 
     public ListeningAnswer toListeningAnswer() {
@@ -93,16 +102,16 @@ public class MongoListeningExam {
                 .flatMap(recording -> recording.getMongoQuestionGroups().stream())
                 .flatMap(group -> group.getQuestions().stream())
                 .map(MongoRecording.MongoQuestionGroup.MongoQuestion::getAnswer)
-                .collect(Collectors.toList());
+                .toList();
 
         List<Integer> numberQuestions = this.recordings.stream()
                 .map(recording -> recording.getMongoQuestionGroups().stream()
                         .mapToInt(group -> group.getQuestions().size())
                         .sum())
-                .collect(Collectors.toList());
+                .toList();
 
         // Return a new ListeningAnswer
-        return new ListeningAnswer(id, testName, answers, numberQuestions);
+        return new ListeningAnswer(id, testName, answers, numberQuestions , List.of(topic1,topic2,topic3,topic4));
     }
 
 }

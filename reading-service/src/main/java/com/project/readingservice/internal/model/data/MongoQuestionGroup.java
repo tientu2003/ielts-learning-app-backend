@@ -42,7 +42,7 @@ public class MongoQuestionGroup {
         this.questionContexts = questionGroup.getContext()
                 .stream()
                 .map(MongoQuestionContext::new)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public QuestionGroup toQuestionGroup() {
@@ -53,11 +53,11 @@ public class MongoQuestionGroup {
         return QuestionGroup.builder()
                 .context(questionContexts.stream()
                         .map(MongoQuestionContext::getData)
-                        .collect(Collectors.toList())
+                        .toList()
                 )
                 .questions(questions.stream()
                         .map(MongoQuestion::getQuestionText)
-                        .collect(Collectors.toList())
+                        .toList()
                 )
                 .readingTestType(readingTestType)
                 .build();
@@ -66,6 +66,6 @@ public class MongoQuestionGroup {
     public List<String> getAnswer(){
         return questions.stream()
                 .map(MongoQuestion::getAnswer)
-                .collect(Collectors.toList());
+                .toList();
     }
 }

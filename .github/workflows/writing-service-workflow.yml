@@ -1,4 +1,4 @@
-name: Deploy Writing Service Server to Azure (Java 22)
+name: Deploy Writing Service Server to Azure
 
 on:
   push:

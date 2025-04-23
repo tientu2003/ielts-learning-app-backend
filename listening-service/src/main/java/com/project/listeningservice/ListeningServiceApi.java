@@ -1,12 +1,14 @@
 package com.project.listeningservice;
 
+import com.project.common.dto.BasicUserRecordDTO;
 import com.project.listeningservice.external.data.ListeningAnswer;
 import com.project.listeningservice.external.data.ListeningExam;
 import com.project.listeningservice.external.user.DetailRecord;
 import com.project.listeningservice.external.user.ListeningSummary;
 import com.project.listeningservice.external.user.UserAnswer;
-import com.project.listeningservice.external.user.UserSimpleRecord;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -17,14 +19,10 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/api/listening")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ListeningServiceApi {
     final CrudListeningService crudListeningService;
     final UserListeningService userListeningService;
-
-    public ListeningServiceApi(CrudListeningService crudListeningService, UserListeningService userListeningService) {
-        this.crudListeningService = crudListeningService;
-        this.userListeningService = userListeningService;
-    }
 
     @GetMapping("/user/summary")
     public ResponseEntity<ListeningSummary> getSummary() {
@@ -33,8 +31,8 @@ public class ListeningServiceApi {
     }
 
     @GetMapping("/user/answer")
-    public ResponseEntity<List<UserSimpleRecord>> getAllListeningRecords() {
-        List<UserSimpleRecord> data = userListeningService.listAllListeningHistory();
+    public ResponseEntity<List<BasicUserRecordDTO>> getAllListeningRecords() {
+        List<BasicUserRecordDTO> data = userListeningService.listAllListeningHistory();
         if(data.isEmpty()) {
             return ResponseEntity.noContent().build();
         }else{

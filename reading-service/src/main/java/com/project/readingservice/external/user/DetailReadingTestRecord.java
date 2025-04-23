@@ -7,7 +7,6 @@ import lombok.Data;
 import java.time.Duration;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 @Builder
 @Data
@@ -34,8 +33,6 @@ public class DetailReadingTestRecord {
         private Boolean check;
 
         private String userAnswer;
-
-        private String suggestion;
 
     }
 }

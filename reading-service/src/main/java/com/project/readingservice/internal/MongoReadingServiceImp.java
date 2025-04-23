@@ -3,6 +3,7 @@ package com.project.readingservice.internal;
 import com.project.common.dto.BasicExamDTO;
 import com.project.readingservice.external.data.*;
 import com.project.readingservice.CRUDReadingService;
+import com.project.readingservice.external.errors.ReadingTestAlreadyExistsException;
 import com.project.readingservice.internal.model.data.MongoReadingTest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;

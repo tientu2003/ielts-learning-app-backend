@@ -27,7 +27,7 @@ public class MongoPassage {
 
         this.paragraphs = passage.getParagraphs().stream()
                 .map(MongoParagraph::new)
-                .collect(Collectors.toList());
+                .toList();
 
         AtomicInteger counter = new AtomicInteger(0);
 
@@ -39,7 +39,7 @@ public class MongoPassage {
 
                     return new MongoQuestionGroup(questionGroup, groupAnswer, start);
                 })
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public Passage toPassage() {
@@ -47,18 +47,18 @@ public class MongoPassage {
                 .articleName(articleTitle)
                 .paragraphs(paragraphs.stream()
                         .map(MongoParagraph::toParagraph)
-                        .collect(Collectors.toList())
+                        .toList()
                 )
                 .questionGroups(questionGroups.stream()
                         .map(MongoQuestionGroup::toQuestionGroup)
-                        .collect(Collectors.toList()))
+                        .toList())
                 .build();
     }
 
     public List<String> getAnswer() {
         return questionGroups.stream()
                 .flatMap(mongoQuestionGroup -> mongoQuestionGroup.getAnswer().stream())
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public List<String> toRecommendationData() {
