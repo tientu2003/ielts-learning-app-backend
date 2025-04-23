@@ -3,17 +3,15 @@ package com.project.listeningservice.internal;
 import com.project.common.LanguageProficiencyDTO;
 import com.project.common.LanguageProficiencyService;
 import com.project.common.dto.BasicExamDTO;
+import com.project.common.dto.BasicUserRecordDTO;
 import com.project.listeningservice.CrudListeningService;
 import com.project.listeningservice.UserListeningService;
 import com.project.listeningservice.external.data.ListeningAnswer;
 import com.project.listeningservice.external.user.DetailRecord;
 import com.project.listeningservice.external.user.ListeningSummary;
 import com.project.listeningservice.external.user.UserAnswer;
-import com.project.listeningservice.external.user.UserSimpleRecord;
 import com.project.listeningservice.external.util.ListeningScore;
 import com.project.listeningservice.external.util.UserService;
-import com.project.listeningservice.internal.model.data.ListeningExamRepository;
-import com.project.listeningservice.internal.model.data.MongoListeningExam;
 import com.project.listeningservice.internal.model.user.MongoUserHistory;
 import com.project.listeningservice.internal.model.user.UserListeningRepository;
 import lombok.RequiredArgsConstructor;
@@ -38,8 +36,6 @@ public class UserListeningServiceImpl extends LanguageProficiencyService impleme
 
     final CrudListeningService crudListeningService;
 
-    final ListeningExamRepository listeningExamRepository;
-
     final UserService userService;
 
     @Override
@@ -54,25 +50,26 @@ public class UserListeningServiceImpl extends LanguageProficiencyService impleme
                 count++;
             }
         }
-        MongoUserHistory newOne = userListeningRepository.insert(new MongoUserHistory(userAnswer,
-                userId, check, listeningScore.getScore(count), listeningAnswer.getNumberQuestions()));
+        MongoUserHistory newOne = userListeningRepository.insert(new MongoUserHistory(userAnswer, userId, check,
+               listeningScore.getScore(count), listeningAnswer.getNumberQuestions(), listeningAnswer.getTopics()));
         log.info("User {} save user answer data", userId);
         return newOne.getId();
     }
 
     @Override
-    public List<UserSimpleRecord> listAllListeningHistory() {
+    public List<BasicUserRecordDTO> listAllListeningHistory() {
         String userId = userService.getUserId();
-        List<MongoUserHistory> records = userListeningRepository.findAllByUserIdLike(userId);
-        return records.stream().map(
-                data -> {
-                    Optional<MongoListeningExam> returnTest = listeningExamRepository.findById(data.getTestId());
-                    return returnTest
-                            .map(mongoListeningExam ->
-                                    data.toUserSimpleRecord(mongoListeningExam.getExamName()))
-                            .orElse(null);
-                }
-        ).toList();
+        return userListeningRepository.findAllByUserIdWithTestName(userId);
+//        List<MongoUserHistory> records = userListeningRepository.findAllByUserIdLike(userId);
+//        return records.stream().map(
+//                data -> {
+//                    Optional<MongoListeningExam> returnTest = listeningExamRepository.findById(data.getTestId());
+//                    return returnTest
+//                            .map(mongoListeningExam ->
+//                                    data.toUserSimpleRecord(mongoListeningExam.getExamName()))
+//                            .orElse(null);
+//                }
+//        ).toList();
     }
 
     @Override

@@ -11,7 +11,6 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 @NoArgsConstructor
 @Data
@@ -34,7 +33,7 @@ public class MongoReadingTest {
                 .name(testName)
                 .passages(passages.stream()
                         .map(MongoPassage::toPassage)
-                        .collect(Collectors.toList()))
+                        .toList())
                 .build();
     }
 
@@ -44,11 +43,11 @@ public class MongoReadingTest {
                 .testName(testName)
                 .answers(passages.stream()
                         .flatMap(passage -> passage.getAnswer().stream())
-                        .collect(Collectors.toList())
+                        .toList()
                 )
                 .recommendations(passages.stream()
                         .flatMap(passage -> passage.toRecommendationData().stream())
-                        .collect(Collectors.toList())
+                        .toList()
                 )
                 .build();
     }
@@ -66,7 +65,7 @@ public class MongoReadingTest {
                     answerIndex.addAndGet(numberOfQuestions); // Cập nhật answerIndex
                     return new MongoPassage(passage, answers);
                 })
-                .collect(Collectors.toList());
+                .toList();
     }
 
 

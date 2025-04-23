@@ -1,10 +1,11 @@
 package com.project.listeningservice.internal.model.user;
 
+import com.project.common.Topic;
 import com.project.common.TopicProficiency;
+import com.project.common.dto.BasicUserRecordDTO;
 import com.project.listeningservice.external.data.ListeningAnswer;
 import com.project.listeningservice.external.user.DetailRecord;
 import com.project.listeningservice.external.user.UserAnswer;
-import com.project.listeningservice.external.user.UserSimpleRecord;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -13,11 +14,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
-import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.IntStream;
-import java.text.SimpleDateFormat;
 
 @Data
 @Document("listening_user")
@@ -36,7 +36,7 @@ public class MongoUserHistory {
 
     @Field
     @NotBlank
-    private String createdAt;
+    private Date createdAt;
 
     @Field
     @NotBlank
@@ -57,13 +57,14 @@ public class MongoUserHistory {
     @Field
     private List<TopicProficiency> topicProficiency;
 
-    public MongoUserHistory(UserAnswer userAnswer, String userId, List<Boolean> check, Double score, List<Integer> noQuestionSession) {
+    public MongoUserHistory(UserAnswer userAnswer, String userId, List<Boolean> check,
+                            Double score, List<Integer> noQuestionSession, List<Topic> topics) {
         this.userId = userId;
         this.check = check;
         this.score = score;
         this.testId = userAnswer.getTestId();
         this.timeTaken = userAnswer.getTimeTaken();
-        this.createdAt = userAnswer.getCreatedAt();
+        this.createdAt = new Date();
         this.userAnswers = userAnswer.getAnswers();
 
         List<TopicProficiency> topicProficiencies = new ArrayList<>();
@@ -78,19 +79,15 @@ public class MongoUserHistory {
                     .average()
                     .orElse(0.0);
 
-            TopicProficiency topicProficiency = null;
-            try {
-                topicProficiency = TopicProficiency.builder()
-                        .skill(1) // 1 for Listening
-                        .bandWeight(TopicProficiency.bandWeight(score))
-                        .sessionWeight(TopicProficiency.calculateSessionWeight(i + 1))
-                        .noQuestionAccuracy(sessionAccuracy)
-                        .dateTaken(new SimpleDateFormat("yyyy-MM-dd").parse(userAnswer.getCreatedAt()))
-                        .build();
-            } catch (ParseException e) {
-                throw new RuntimeException(e);
-            }
-
+            TopicProficiency topicProficiency;
+            topicProficiency = TopicProficiency.builder()
+                    .topic(topics.get(i))
+                    .skill(1) // 1 for Listening
+                    .bandWeight(TopicProficiency.bandWeight(score))
+                    .sessionWeight(TopicProficiency.calculateSessionWeight(i + 1))
+                    .noQuestionAccuracy(sessionAccuracy)
+                    .dateTaken(new Date())
+                    .build();
             topicProficiencies.add(topicProficiency);
             startIndex += sessionSize;
         }
@@ -98,13 +95,14 @@ public class MongoUserHistory {
         this.topicProficiency = topicProficiencies;
     }
 
-    public UserSimpleRecord toUserSimpleRecord(String testName){
-        return UserSimpleRecord.builder()
-                .id(this.id)
-                .score(this.score)
-                .name(testName)
-                .date(this.createdAt)
-                .build();
+    public BasicUserRecordDTO toUserSimpleRecord(String testName){
+            return BasicUserRecordDTO.builder()
+                    .id(this.id)
+                    .score(this.score)
+                    .name(testName)
+                    .date(this.createdAt)
+                    .topics(topicProficiency.stream().map(TopicProficiency::getTopic).toList())
+                    .build();
     }
 
     public DetailRecord toDetailRecord(ListeningAnswer listeningAnswer) {

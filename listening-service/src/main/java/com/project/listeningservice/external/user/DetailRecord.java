@@ -4,6 +4,7 @@ import com.project.listeningservice.external.data.ListeningAnswer;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.Date;
 import java.util.List;
 
 @Builder
@@ -20,7 +21,7 @@ public class DetailRecord {
 
     private List<Result> results;
 
-    private String date;
+    private Date date;
 
     @Data
     @Builder

@@ -1,34 +1,31 @@
 package com.project.readingservice;
 
+import com.project.common.dto.BasicUserRecordDTO;
 import com.project.readingservice.external.data.AnswerData;
 import com.project.readingservice.external.data.NewReadingTest;
-import com.project.readingservice.external.data.ReadingTestAlreadyExistsException;
+import com.project.readingservice.external.errors.ReadingTestAlreadyExistsException;
 import com.project.readingservice.external.data.ReadingTestData;
-import com.project.readingservice.external.user.BasicReadingHistory;
 import com.project.readingservice.external.user.DetailReadingTestRecord;
 import com.project.readingservice.external.user.GeneralAssessment;
 import com.project.readingservice.external.user.UserAnswer;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
-import java.util.UUID;
 
 @Slf4j
 @RestController
 @RequestMapping("/api/reading")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ReadingServiceApi {
 
     final CRUDReadingService crudReadingService;
     final UserReadingService userReadingService;
-    public ReadingServiceApi(CRUDReadingService crudReadingService, 
-                             UserReadingService userReadingService) {
-        this.crudReadingService = crudReadingService;
-        this.userReadingService = userReadingService;
-    }
 
     @GetMapping("/user/review")
     public ResponseEntity<GeneralAssessment> getGeneralAssessment() {
@@ -37,8 +34,8 @@ public class ReadingServiceApi {
     }
 
     @GetMapping("/user/answer")
-    public ResponseEntity<List<BasicReadingHistory>> getAllBasicReadingHistory() {
-        List<BasicReadingHistory> data = userReadingService.listUserReadingTestHistory();
+    public ResponseEntity<List<BasicUserRecordDTO>> getAllBasicReadingHistory() {
+        List<BasicUserRecordDTO> data = userReadingService.listUserReadingTestHistory();
         if(data.isEmpty()) {
             return ResponseEntity.noContent().build();
         }else{

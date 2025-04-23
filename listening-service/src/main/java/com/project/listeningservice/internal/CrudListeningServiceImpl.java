@@ -7,20 +7,18 @@ import com.project.listeningservice.external.data.ListeningExam;
 import com.project.listeningservice.internal.model.data.ListeningExamRepository;
 import com.project.listeningservice.internal.model.data.MongoIdName;
 import com.project.listeningservice.internal.model.data.MongoListeningExam;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CrudListeningServiceImpl implements CrudListeningService {
 
     final ListeningExamRepository listeningExamRepository;
-
-    public CrudListeningServiceImpl(ListeningExamRepository listeningExamRepository) {
-        this.listeningExamRepository = listeningExamRepository;
-    }
 
     @Override
     public ListeningExam getListeningExamById(String id) {
@@ -36,7 +34,7 @@ public class CrudListeningServiceImpl implements CrudListeningService {
 
     @Override
     public List<BasicExamDTO> listAllListeningExams() {
-        return listeningExamRepository.getAllIdNames().parallelStream().map(MongoIdName::toIdName).collect(Collectors.toList());
+        return listeningExamRepository.getAllIdNames().parallelStream().map(MongoIdName::toIdName).toList();
     }
 
 

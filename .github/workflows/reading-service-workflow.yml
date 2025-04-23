@@ -1,5 +1,4 @@
-name: Deploy Reading Service Server to Azure (Java 22)
-
+name: Deploy Reading Service Server to Azure
 on:
   push:
     branches:

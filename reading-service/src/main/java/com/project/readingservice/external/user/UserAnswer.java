@@ -4,7 +4,6 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.Duration;
-import java.util.Date;
 import java.util.List;
 
 @Data
@@ -12,8 +11,6 @@ import java.util.List;
 public class UserAnswer {
 
     private String testId;
-
-    private Date createdAt;
 
     private Duration timeTaken;
 

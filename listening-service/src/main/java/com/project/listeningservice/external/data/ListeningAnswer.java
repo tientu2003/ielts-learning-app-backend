@@ -1,5 +1,6 @@
 package com.project.listeningservice.external.data;
 
+import com.project.common.Topic;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -15,4 +16,6 @@ public class ListeningAnswer {
     List<String> answers;
 
     List<Integer> numberQuestions;
+
+    List<Topic> topics;
 }

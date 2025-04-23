@@ -1,8 +1,8 @@
 package com.project.readingservice.internal.model.user;
 
 import com.project.common.TopicProficiency;
+import com.project.common.dto.BasicUserRecordDTO;
 import com.project.readingservice.external.data.AnswerData;
-import com.project.readingservice.external.user.BasicReadingHistory;
 import com.project.readingservice.external.user.DetailReadingTestRecord;
 import com.project.readingservice.external.user.UserAnswer;
 import jakarta.validation.constraints.NotBlank;
@@ -19,7 +19,6 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.IntStream;
 
 @Document("reading_user")
@@ -61,24 +60,18 @@ public class UserAnswerHistory {
     private List<Boolean> check;
 
     @Field
-    @Size(max = 40, min = 40)
-    private List<String> suggestions;
-
-    @Field
     private List<TopicProficiency> topicProficiency;
 
     public UserAnswerHistory(String userId,
                              UserAnswer userAnswer,
                              Double score,
-                             List<Boolean> check,
-                             List<String> suggestions) {
+                             List<Boolean> check ){
         this.userId = userId;
         this.testId = userAnswer.getTestId();
         this.score = score;
-        this.createdAt = userAnswer.getCreatedAt();
+        this.createdAt = new Date();
         this.timeTaken = userAnswer.getTimeTaken();
         this.userAnswers = userAnswer.getAnswers();
-        this.suggestions = suggestions;
         this.check = check;
     }
 
@@ -101,20 +94,19 @@ public class UserAnswerHistory {
                 results.add(DetailReadingTestRecord.Result.builder()
                         .check(this.check.get(index))
                         .userAnswer(this.userAnswers.get(index))
-                        .suggestion(this.suggestions.get(index))
                         .build())
         );
         return results;
     }
 
 
-    public BasicReadingHistory toBasicReadingHistory(String testName) {
-        return BasicReadingHistory.builder()
-                .id(this.userId)
-                .testName(testName)
-                .createdAt(this.createdAt)
-                .recordId(this.id)
+    public BasicUserRecordDTO toBasicReadingHistory(String testName) {
+        return BasicUserRecordDTO.builder()
+                .id(this.id)
+                .name(testName)
+                .date(this.createdAt)
                 .score(this.score)
+                .topics(topicProficiency.stream().map(TopicProficiency::getTopic).toList())
                 .build();
     }
 }

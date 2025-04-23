@@ -2,6 +2,7 @@ package com.project.readingservice;
 
 import com.project.common.dto.BasicExamDTO;
 import com.project.readingservice.external.data.*;
+import com.project.readingservice.external.errors.ReadingTestAlreadyExistsException;
 
 import java.util.List;
 
