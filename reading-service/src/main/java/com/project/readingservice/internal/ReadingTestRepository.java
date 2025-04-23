@@ -1,6 +1,6 @@
 package com.project.readingservice.internal;
 
-import com.project.readingservice.external.data.ExamData;
+import com.project.common.dto.BasicExamDTO;
 import com.project.readingservice.internal.model.data.MongoReadingTest;
 import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -12,7 +12,7 @@ public interface ReadingTestRepository extends MongoRepository<MongoReadingTest,
     @Aggregation(pipeline = {
             "{ $project: { id: '$_id', name: '$test_name' } }"
     })
-    List<ExamData> findAllTestNames();
+    List<BasicExamDTO> findAllTestNames();
 
     List<MongoReadingTest> findByTestName(String testName);
 

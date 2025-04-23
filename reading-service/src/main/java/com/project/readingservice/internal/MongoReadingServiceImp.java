@@ -1,8 +1,10 @@
 package com.project.readingservice.internal;
 
+import com.project.common.dto.BasicExamDTO;
 import com.project.readingservice.external.data.*;
 import com.project.readingservice.CRUDReadingService;
 import com.project.readingservice.internal.model.data.MongoReadingTest;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,17 +15,13 @@ import java.util.Optional;
 
 @Service
 @Log4j2
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class MongoReadingServiceImp implements CRUDReadingService {
 
-    private ReadingTestRepository readingTestRepository;
-
-    @Autowired
-    public MongoReadingServiceImp(ReadingTestRepository readingTestRepository) {
-        this.readingTestRepository = readingTestRepository;
-    }
+    final ReadingTestRepository readingTestRepository;
 
     @Override
-    public List<ExamData> listAllReadingTestName() {
+    public List<BasicExamDTO> listAllReadingTestName() {
         return readingTestRepository.findAllTestNames();
     }
 

@@ -1,6 +1,6 @@
 package com.project.readingservice;
 
-import com.project.readingservice.external.data.ExamData;
+import com.project.common.dto.BasicExamDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +19,7 @@ public class ReadingServicePublicApi {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<ExamData>> getAllReadingTests(){
+    public ResponseEntity<List<BasicExamDTO>> getAllReadingTests(){
         return ResponseEntity.ok(crudReadingService.listAllReadingTestName());
     }
 

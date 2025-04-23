@@ -32,6 +32,11 @@
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.project</groupId>
+            <artifactId>common</artifactId>
+            <version>1.0</version>
+        </dependency>
 
     </dependencies>
 

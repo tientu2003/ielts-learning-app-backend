@@ -1,7 +1,7 @@
 package com.project.listeningservice.internal;
 
+import com.project.common.dto.BasicExamDTO;
 import com.project.listeningservice.CrudListeningService;
-import com.project.listeningservice.external.data.IdName;
 import com.project.listeningservice.external.data.ListeningAnswer;
 import com.project.listeningservice.external.data.ListeningExam;
 import com.project.listeningservice.internal.model.data.ListeningExamRepository;
@@ -35,7 +35,7 @@ public class CrudListeningServiceImpl implements CrudListeningService {
     }
 
     @Override
-    public List<IdName> listAllListeningExams() {
+    public List<BasicExamDTO> listAllListeningExams() {
         return listeningExamRepository.getAllIdNames().parallelStream().map(MongoIdName::toIdName).collect(Collectors.toList());
     }
 

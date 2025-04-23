@@ -41,13 +41,12 @@ public class MongoUserWritingRecord {
     @Field(name = "answer")
     private String answer;
 
-    public MongoUserWritingRecord(UserAnswer userAnswer, WritingScore score, String userId) {
+    public MongoUserWritingRecord(UserAnswer userAnswer, String userId) {
         this.userId = userId;
         this.answer = userAnswer.getAnswer();
         this.examId = userAnswer.getExamId();
         this.createAt = userAnswer.getCreatedAt();
         this.duration = userAnswer.getDuration();
-        this.score = score;
     }
 
     public DetailRecord toDetailRecord(WritingExam writingExam) {

@@ -1,5 +1,6 @@
 package com.project.readingservice.internal.model.user;
 
+import com.project.common.TopicProficiency;
 import com.project.readingservice.external.data.AnswerData;
 import com.project.readingservice.external.user.BasicReadingHistory;
 import com.project.readingservice.external.user.DetailReadingTestRecord;
@@ -63,13 +64,15 @@ public class UserAnswerHistory {
     @Size(max = 40, min = 40)
     private List<String> suggestions;
 
+    @Field
+    private List<TopicProficiency> topicProficiency;
 
-    public UserAnswerHistory(UUID userId,
+    public UserAnswerHistory(String userId,
                              UserAnswer userAnswer,
                              Double score,
                              List<Boolean> check,
                              List<String> suggestions) {
-        this.userId = userId.toString();
+        this.userId = userId;
         this.testId = userAnswer.getTestId();
         this.score = score;
         this.createdAt = userAnswer.getCreatedAt();
@@ -82,7 +85,7 @@ public class UserAnswerHistory {
     public DetailReadingTestRecord toDetailReadingTestRecord(AnswerData answerData) {
         return DetailReadingTestRecord.builder()
                 .id(this.id)
-                .userId(UUID.fromString(this.userId))
+                .userId(this.userId)
                 .score(this.score)
                 .createAt(this.createdAt)
                 .timeTaken(this.timeTaken)
@@ -107,7 +110,7 @@ public class UserAnswerHistory {
 
     public BasicReadingHistory toBasicReadingHistory(String testName) {
         return BasicReadingHistory.builder()
-                .id(UUID.fromString(this.userId))
+                .id(this.userId)
                 .testName(testName)
                 .createdAt(this.createdAt)
                 .recordId(this.id)

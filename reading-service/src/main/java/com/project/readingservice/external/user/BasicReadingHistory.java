@@ -11,7 +11,7 @@ import java.util.UUID;
 @Builder
 public class BasicReadingHistory {
 
-    private UUID id;
+    private String id;
 
     private String recordId;
 

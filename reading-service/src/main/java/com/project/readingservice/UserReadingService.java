@@ -10,12 +10,12 @@ import java.util.UUID;
 
 public interface UserReadingService {
 
-    DetailReadingTestRecord saveUserAnswerData(UUID userId, UserAnswer userAnswer);
+    DetailReadingTestRecord saveUserAnswerData(UserAnswer userAnswer);
 
-    List<BasicReadingHistory> listUserReadingTestHistory(UUID userId);
+    List<BasicReadingHistory> listUserReadingTestHistory();
 
     DetailReadingTestRecord getUserDetailReadingTestHistory(String recordId);
 
-    GeneralAssessment getReadingGeneralAssessment(UUID userId);
+    GeneralAssessment getReadingGeneralAssessment();
 
 }

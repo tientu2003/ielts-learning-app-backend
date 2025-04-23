@@ -8,9 +8,12 @@ import com.project.readingservice.external.user.DetailReadingTestRecord;
 import com.project.readingservice.external.user.GeneralAssessment;
 import com.project.readingservice.external.user.UserAnswer;
 import com.project.readingservice.external.util.ReadingScore;
+import com.project.readingservice.external.util.UserService;
 import com.project.readingservice.internal.model.data.MongoReadingTest;
 import com.project.readingservice.internal.model.user.UserAnswerHistory;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +25,7 @@ import java.util.stream.IntStream;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class UserReadingServiceImp implements UserReadingService {
 
 
@@ -33,20 +37,12 @@ public class UserReadingServiceImp implements UserReadingService {
 
     final ReadingScore readingScore;
 
-    public UserReadingServiceImp(CRUDReadingService crudReadingService,
-                                 UserReadingRepository userReadingRepository,
-                                 ReadingScore readingScore,
-                                 ReadingTestRepository readingTestRepository) {
-        this.crudReadingService = crudReadingService;
-        this.userReadingRepository = userReadingRepository;
-        this.readingScore = readingScore;
-        this.readingTestRepository = readingTestRepository;
-    }
+    final UserService userService;
 
     @Override
     @Transactional
-    public DetailReadingTestRecord saveUserAnswerData(UUID userId, UserAnswer userAnswer) {
-
+    public DetailReadingTestRecord saveUserAnswerData(UserAnswer userAnswer) {
+        String userId = userService.getUserId();
         log.info("User {} save user answer data", userId);
 
         AnswerData testAnswer = crudReadingService.getAnswerTest(userAnswer.getTestId());
@@ -68,8 +64,11 @@ public class UserReadingServiceImp implements UserReadingService {
     }
 
     @Override
-    public List<BasicReadingHistory> listUserReadingTestHistory(UUID userId) {
-        List<UserAnswerHistory> datas = userReadingRepository.findAllByUserIdLike(userId.toString());
+    public List<BasicReadingHistory> listUserReadingTestHistory() {
+
+        String userId = userService.getUserId();
+
+        List<UserAnswerHistory> datas = userReadingRepository.findAllByUserIdLike(userId);
 
         return datas.stream().map(
                 data -> {
@@ -93,9 +92,10 @@ public class UserReadingServiceImp implements UserReadingService {
     }
 
     @Override
-    public GeneralAssessment getReadingGeneralAssessment(UUID userId) {
+    public GeneralAssessment getReadingGeneralAssessment() {
+        String userId = userService.getUserId();
 
-        List<UserAnswerHistory> AllRecord = userReadingRepository.findAllByUserIdLike(userId.toString());
+        List<UserAnswerHistory> AllRecord = userReadingRepository.findAllByUserIdLike(userId);
         List<GeneralAssessment.Score> allScore = new ArrayList<>();
 
         double totalScore = 0.0;

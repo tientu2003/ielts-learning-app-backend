@@ -30,15 +30,15 @@ public class ReadingServiceApi {
         this.userReadingService = userReadingService;
     }
 
-    @GetMapping("/user/{id}/review")
-    public ResponseEntity<GeneralAssessment> getGeneralAssessment(@PathVariable("id") UUID id) {
-        GeneralAssessment data = userReadingService.getReadingGeneralAssessment(id);
+    @GetMapping("/user/review")
+    public ResponseEntity<GeneralAssessment> getGeneralAssessment() {
+        GeneralAssessment data = userReadingService.getReadingGeneralAssessment();
         return ResponseEntity.ok(data);
     }
 
-    @GetMapping("/user/{id}/answer")
-    public ResponseEntity<List<BasicReadingHistory>> getAllBasicReadingHistory(@PathVariable UUID id) {
-        List<BasicReadingHistory> data = userReadingService.listUserReadingTestHistory(id);
+    @GetMapping("/user/answer")
+    public ResponseEntity<List<BasicReadingHistory>> getAllBasicReadingHistory() {
+        List<BasicReadingHistory> data = userReadingService.listUserReadingTestHistory();
         if(data.isEmpty()) {
             return ResponseEntity.noContent().build();
         }else{
@@ -46,9 +46,9 @@ public class ReadingServiceApi {
         }
     }
 
-    @PostMapping("/user/{id}/answer")
-    public ResponseEntity<String> sendUserAnswer(@PathVariable("id") String userId, @RequestBody UserAnswer userAnswer) {
-        DetailReadingTestRecord received =  userReadingService.saveUserAnswerData(UUID.fromString(userId), userAnswer);
+    @PostMapping("/user/answer")
+    public ResponseEntity<String> sendUserAnswer( @RequestBody UserAnswer userAnswer) {
+        DetailReadingTestRecord received =  userReadingService.saveUserAnswerData(userAnswer);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequestUri()
                 .path("/{record-id}")
@@ -58,9 +58,8 @@ public class ReadingServiceApi {
         return ResponseEntity.created(location).body(received.getId());
     }
 
-    @GetMapping("/user/{id}/answer/{record_id}")
-    public ResponseEntity<DetailReadingTestRecord> getDetailReadingAnswerRecord(@PathVariable("id") UUID userId,
-                                                                                @PathVariable("record_id") String record_id) {
+    @GetMapping("/user/answer/{record_id}")
+    public ResponseEntity<DetailReadingTestRecord> getDetailReadingAnswerRecord(@PathVariable("record_id") String record_id) {
         DetailReadingTestRecord result = userReadingService.getUserDetailReadingTestHistory(record_id);
         if(result == null) {
             return ResponseEntity.notFound().build();
