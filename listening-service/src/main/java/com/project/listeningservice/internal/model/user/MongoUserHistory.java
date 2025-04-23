@@ -79,7 +79,7 @@ public class MongoUserHistory {
                     .average()
                     .orElse(0.0);
 
-            TopicProficiency topicProficiency = null;
+            TopicProficiency topicProficiency;
             topicProficiency = TopicProficiency.builder()
                     .topic(topics.get(i))
                     .skill(1) // 1 for Listening
