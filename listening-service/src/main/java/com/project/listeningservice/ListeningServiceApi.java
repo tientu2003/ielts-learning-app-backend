@@ -1,5 +1,8 @@
 package com.project.listeningservice;
 
+import com.project.common.LanguageProficiencyDTO;
+import com.project.common.LanguageProficiencyService;
+import com.project.common.constraints.Topic;
 import com.project.common.dto.BasicUserRecordDTO;
 import com.project.common.dto.UserSummary;
 import com.project.listeningservice.external.data.ListeningAnswer;
@@ -23,6 +26,7 @@ import java.util.List;
 public class ListeningServiceApi {
     final CrudListeningService crudListeningService;
     final UserListeningService userListeningService;
+    final LanguageProficiencyService languageProficiencyService;
 
     @GetMapping("/user/summary")
     public ResponseEntity<UserSummary> getSummary() {
@@ -78,6 +82,33 @@ public class ListeningServiceApi {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(listeningExam);
+    }
+
+    @PostMapping("/user/tpi")
+    public ResponseEntity<List<LanguageProficiencyDTO>> searchTopicProficiency(@RequestBody List<Topic> topics) {
+        List<LanguageProficiencyDTO> list =  languageProficiencyService.getAllTopicProficiencyIndexs(topics);
+        if(list == null || list.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(list);
+    }
+
+    @GetMapping("/user/topic-list")
+    public ResponseEntity<List<Topic>> getUserListeningTopics() {
+        List<Topic> list = languageProficiencyService.getAllTopicsByUserId();
+        if(list == null || list.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(list);
+    }
+
+    @GetMapping("/data/topic-list")
+    public ResponseEntity<List<Topic>> getAvailableListeningTopics() {
+        List<Topic> list = crudListeningService.listAllTopics();
+        if(list == null || list.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(list);
     }
 
 }

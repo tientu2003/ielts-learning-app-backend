@@ -1,4 +1,4 @@
-package com.project.common;
+package com.project.common.constraints;
 
 public enum ListeningTopic implements Topic{
     // Listening Topics

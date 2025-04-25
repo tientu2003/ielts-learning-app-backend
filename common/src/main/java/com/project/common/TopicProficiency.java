@@ -1,5 +1,6 @@
 package com.project.common;
 
+import com.project.common.constraints.Topic;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,21 +20,21 @@ public class TopicProficiency {
     // 1 -> Listening
     // 2 -> Reading
     private Integer skill;
-
+    private Double difficulty;
     // Chỉ số thành thạo
     // bandWeight là trọng số tổng điểm của bài thi nếu bài thi được 9.0 thì trọng số là 1
     // lpi =  bandWeight, sectionWeight, accuracy
     private Double bandWeight;
     private Double sessionWeight;
-    private Double noQuestionAccuracy;
+    private Double accuracy;
     private Date dateTaken;
 
     public Double getTopicProficiencyIndex(){
-        return bandWeight*sessionWeight*noQuestionAccuracy*timeDecay(Date.from(dateTaken.toInstant()));
+        return bandWeight*sessionWeight*accuracy*difficulty*timeDecay(Date.from(dateTaken.toInstant()));
     }
 
     public Double getFinalWeight(){
-        return bandWeight*sessionWeight*timeDecay(Date.from(dateTaken.toInstant()));
+        return bandWeight*sessionWeight*difficulty*timeDecay(Date.from(dateTaken.toInstant()));
     }
 
     private static Double timeDecay(Date testDate) {

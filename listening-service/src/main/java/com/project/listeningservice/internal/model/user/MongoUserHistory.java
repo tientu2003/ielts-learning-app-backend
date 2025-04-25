@@ -1,6 +1,5 @@
 package com.project.listeningservice.internal.model.user;
 
-import com.project.common.Topic;
 import com.project.common.TopicProficiency;
 import com.project.common.dto.BasicUserRecordDTO;
 import com.project.listeningservice.external.data.ListeningAnswer;
@@ -10,9 +9,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,7 +22,7 @@ import java.util.stream.IntStream;
 @Document("listening_user")
 @NoArgsConstructor
 public class MongoUserHistory {
-    @MongoId
+    @Id
     private String id;
 
     @Field
@@ -58,7 +57,7 @@ public class MongoUserHistory {
     private List<TopicProficiency> topicProficiency;
 
     public MongoUserHistory(UserAnswer userAnswer, String userId, List<Boolean> check,
-                            Double score, List<Integer> noQuestionSession, List<Topic> topics) {
+                            Double score, ListeningAnswer listeningAnswer) {
         this.userId = userId;
         this.check = check;
         this.score = score;
@@ -69,8 +68,8 @@ public class MongoUserHistory {
 
         List<TopicProficiency> topicProficiencies = new ArrayList<>();
         int startIndex = 0;
-
-        for (int i = 0; i < noQuestionSession.size(); i++) {
+        List<Integer> noQuestionSession = listeningAnswer.getNumberQuestions();
+        for (int i = 0; i < noQuestionSession.size() ; i++) {
             int sessionSize = noQuestionSession.get(i);
             List<Boolean> sessionCheck = check.subList(startIndex, startIndex + sessionSize);
 
@@ -81,11 +80,12 @@ public class MongoUserHistory {
 
             TopicProficiency topicProficiency;
             topicProficiency = TopicProficiency.builder()
-                    .topic(topics.get(i))
+                    .topic(listeningAnswer.getTopics().get(i))
                     .skill(1) // 1 for Listening
+                    .difficulty(listeningAnswer.getDifficulties().get(i))
                     .bandWeight(TopicProficiency.bandWeight(score))
                     .sessionWeight(TopicProficiency.calculateSessionWeight(i + 1))
-                    .noQuestionAccuracy(sessionAccuracy)
+                    .accuracy(sessionAccuracy)
                     .dateTaken(new Date())
                     .build();
             topicProficiencies.add(topicProficiency);

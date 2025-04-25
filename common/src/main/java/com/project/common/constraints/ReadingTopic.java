@@ -1,4 +1,4 @@
-package com.project.common;
+package com.project.common.constraints;
 
 public enum ReadingTopic implements Topic{
     // Reading Topics 

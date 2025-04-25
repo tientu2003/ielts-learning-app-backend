@@ -1,7 +1,8 @@
 package com.project.common.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.project.common.Topic;
+import com.project.common.constraints.CefrLevel;
+import com.project.common.constraints.Topic;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,4 +17,5 @@ public class BasicExamDTO {
     private String id;
     private String testName;
     private List<Topic> topic;
+    private List<CefrLevel> levels;
 }

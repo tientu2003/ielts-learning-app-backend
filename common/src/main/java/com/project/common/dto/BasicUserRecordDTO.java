@@ -2,7 +2,7 @@ package com.project.common.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.project.common.Topic;
+import com.project.common.constraints.Topic;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

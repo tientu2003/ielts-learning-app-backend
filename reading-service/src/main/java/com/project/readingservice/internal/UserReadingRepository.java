@@ -1,6 +1,6 @@
 package com.project.readingservice.internal;
 
-import com.project.common.Topic;
+import com.project.common.constraints.Topic;
 import com.project.common.TopicProficiency;
 import com.project.common.dto.BasicUserRecordDTO;
 import com.project.readingservice.internal.model.user.UserAnswerHistory;

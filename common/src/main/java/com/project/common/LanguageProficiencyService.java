@@ -1,5 +1,7 @@
 package com.project.common;
 
+import com.project.common.constraints.Topic;
+
 import java.util.List;
 
 public abstract class LanguageProficiencyService {
@@ -27,6 +29,10 @@ public abstract class LanguageProficiencyService {
         return 1 - (weightedStdDev / 100);
     }
 
-    public abstract List<LanguageProficiencyDTO> getAllTopicProficiencyIndexs();
+    public abstract LanguageProficiencyDTO getSkillProficiencyDTO();
+
+    public abstract List<LanguageProficiencyDTO> getAllTopicProficiencyIndexs(List<Topic> topics);
+
+    public abstract List<Topic> getAllTopicsByUserId();
 
 }

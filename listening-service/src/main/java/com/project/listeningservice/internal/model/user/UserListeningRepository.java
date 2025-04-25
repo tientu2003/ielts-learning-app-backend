@@ -1,15 +1,15 @@
 package com.project.listeningservice.internal.model.user;
 
-import com.project.common.Topic;
+import com.project.common.constraints.Topic;
 import com.project.common.TopicProficiency;
 import com.project.common.dto.BasicUserRecordDTO;
 import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
+import java.util.Map;
 
 public interface UserListeningRepository extends MongoRepository<MongoUserHistory,String> {
-    List<MongoUserHistory> findAllByUserIdLike(String userId);
 
     @Aggregation(pipeline = {
             "{ $match: { userId: ?0 } }",
@@ -45,4 +45,23 @@ public interface UserListeningRepository extends MongoRepository<MongoUserHistor
             "{ $project: { _id: 0, averageScore: 1 } }"
     })
     Double calculateAverageScoreByUserId(String userId);
+
+    @Aggregation(pipeline = {
+            "{ $match: { userId: ?0 } }",
+            "{ $unwind: '$topicProficiency' }",
+            "{ $group: { _id: '$topicProficiency.topic', averageScore: { $avg: '$score' } } }",
+            "{ $project: { _id: 0, topic: '$_id', averageScore: 1 } }"
+    })
+    Map<Topic, Double> calculateAverageScoreByUserIdGroupByTopic(String userId);
+
+    @Aggregation(pipeline = {
+            "{ $match: { userId: ?0 } }",
+            "{ $unwind: '$topicProficiency' }",
+            "{ $group: { _id: null, " +
+                    "averageDifficulty: { $avg: '$topicProficiency.difficulty' }, " +
+                    "averageScore: { $avg: '$score' }, " +
+                    "averageAccuracy: { $avg: '$topicProficiency.accuracy' } } }",
+            "{ $project: { _id: 0, averageDifficulty: 1, averageScore: 1, averageAccuracy: 1 } }"
+    })
+    Map<String, Double> calculateAverageMetricsByUserId(String userId);
 }

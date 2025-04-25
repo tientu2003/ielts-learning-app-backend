@@ -1,7 +1,7 @@
 package com.project.common.dto;
 
 import com.project.common.LanguageProficiencyDTO;
-import com.project.common.Topic;
+import com.project.common.constraints.Topic;
 import lombok.Builder;
 import lombok.Data;
 
@@ -23,4 +23,6 @@ public class UserSummary {
     private List<Topic> topics;
 
     List<LanguageProficiencyDTO> languageProficiencies;
+
+    private LanguageProficiencyDTO skillLanguageProficiency;
 }
