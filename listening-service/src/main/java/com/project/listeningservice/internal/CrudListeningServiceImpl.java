@@ -1,6 +1,5 @@
 package com.project.listeningservice.internal;
 
-import com.project.common.constraints.Topic;
 import com.project.common.dto.BasicExamDTO;
 import com.project.listeningservice.CrudListeningService;
 import com.project.listeningservice.external.data.ListeningAnswer;
@@ -39,7 +38,7 @@ public class CrudListeningServiceImpl implements CrudListeningService {
     }
 
     @Override
-    public List<Topic> listAllTopics() {
+    public List<String> listAllTopics() {
         return listeningExamRepository.findDistinctTopics();
     }
 

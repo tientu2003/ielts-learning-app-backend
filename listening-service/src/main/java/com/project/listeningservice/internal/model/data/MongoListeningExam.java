@@ -1,7 +1,6 @@
 package com.project.listeningservice.internal.model.data;
 
 import com.project.common.constraints.CefrLevel;
-import com.project.common.constraints.Topic;
 import com.project.listeningservice.external.data.ListeningAnswer;
 import com.project.listeningservice.external.data.ListeningExam;
 import lombok.Data;
@@ -24,11 +23,11 @@ public class MongoListeningExam {
     private List<MongoRecording> recordings;
 
     @Field(name = "topics")
-    private List<Topic> topics;
+    private List<String> topics;
     @Field(name = "levels")
     private List<CefrLevel> levels;
-    @Field(name = "difficults")
-    private List<Double> difficults;
+    @Field(name = "difficulties")
+    private List<Double> difficulties;
 
     @Data
     public static class MongoRecording {
@@ -109,7 +108,7 @@ public class MongoListeningExam {
                 .toList();
 
         // Return a new ListeningAnswer
-        return new ListeningAnswer(id, testName, answers, numberQuestions, topics, difficults);
+        return new ListeningAnswer(id, testName, answers, numberQuestions, topics, difficulties);
     }
 
 }

@@ -21,4 +21,14 @@ public class ListeningServicePublicApi {
     public ResponseEntity<List<BasicExamDTO>> getAllListeningExam(){
         return ResponseEntity.ok(crudListeningService.listAllListeningExams());
     }
+
+    @GetMapping("/data/topic-list")
+    public ResponseEntity<List<String>> getAvailableListeningTopics() {
+        List<String> list = crudListeningService.listAllTopics();
+        if(list == null || list.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(list);
+    }
+
 }
