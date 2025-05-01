@@ -1,13 +1,20 @@
 package com.project.listeningservice.internal;
 
+import com.project.common.LanguageProficiencyDTO;
+import com.project.common.LanguageProficiencyService;
 import com.project.common.SuggestionService;
 import com.project.common.dto.BasicExamDTO;
 import com.project.listeningservice.CrudListeningService;
 import com.project.listeningservice.external.util.UserService;
+import com.project.listeningservice.internal.model.user.UserListeningRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -18,6 +25,10 @@ public class SuggestionServiceImpl implements SuggestionService {
 
     final CrudListeningService crudListeningService;
 
+    final LanguageProficiencyService languageProficiencyService;
+
+    final UserListeningRepository userListeningRepository;
+
     @Override
     public String getPersonalRecommendation() {
         return "";
@@ -26,7 +37,43 @@ public class SuggestionServiceImpl implements SuggestionService {
     @Override
     public BasicExamDTO getSuggestedNextExam() {
         String userId = userService.getUserId();
-        List<BasicExamDTO> exams = crudListeningService.listAllListeningExams();
-        return exams.getFirst();
+        List<BasicExamDTO> allExams = crudListeningService.listAllListeningExams();
+
+        // Get user's language proficiency data for all topics
+        List<LanguageProficiencyDTO> topicProficiencies = languageProficiencyService.getAllTopicProficiencyIndexs(
+                languageProficiencyService.getAllTopicsByUserId()
+        );
+        if (topicProficiencies == null) {
+            return allExams.isEmpty() ? null : allExams.get((int) (Math.random() * allExams.size()));
+        }
+
+        // Get user's recent exam history (last 2 months)
+        Date twoMonthsAgo = Date.from(LocalDate.now().minusWeeks(2)
+                .atStartOfDay(ZoneId.systemDefault()).toInstant());
+        List<String> recentExamIds = userListeningRepository.findByUserIdAndDateAfter(userId, twoMonthsAgo);
+
+        // Filter out recently taken exams
+        List<BasicExamDTO> eligibleExams = allExams.stream()
+                .filter(exam -> !recentExamIds.contains(exam.getId()))
+                .toList();
+
+        if (eligibleExams.isEmpty()) {
+            return null;
+        }
+
+        // Find weakest topics based on TPI (Topic Proficiency Index)
+        List<String> weakestTopics = topicProficiencies.stream()
+                .sorted(Comparator.comparing(LanguageProficiencyDTO::getTpi))
+                .map(LanguageProficiencyDTO::getTopic)
+                .limit(3)
+                .toList();
+
+        // Score each eligible exam based on multiple factors
+        return eligibleExams.stream()
+                .map(exam -> new ExamScore(exam, calculateExamScore(exam, weakestTopics, topicProficiencies)))
+                .max(Comparator.comparing(ExamScore::getScore))
+                .map(ExamScore::getExam)
+                .orElse(eligibleExams.getFirst());
     }
+
 }

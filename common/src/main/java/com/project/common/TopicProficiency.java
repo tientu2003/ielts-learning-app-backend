@@ -1,6 +1,5 @@
 package com.project.common;
 
-import com.project.common.constraints.Topic;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,7 +15,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Builder
 public class TopicProficiency {
-    private Topic topic;
+    private String topic;
     // 1 -> Listening
     // 2 -> Reading
     private Integer skill;
