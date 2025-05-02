@@ -55,7 +55,6 @@ public class UserListeningServiceImpl implements UserListeningService {
         }
         MongoUserHistory newOne = userListeningRepository.insert(new MongoUserHistory(userAnswer, userId, check,
                listeningScore.getScore(count), listeningAnswer));
-        log.info("User {} save user answer data", userId);
         return newOne.getId();
     }
 
@@ -63,16 +62,6 @@ public class UserListeningServiceImpl implements UserListeningService {
     public List<BasicUserRecordDTO> listAllListeningHistory() {
         String userId = userService.getUserId();
         return userListeningRepository.findAllByUserIdWithTestName(userId);
-//        List<MongoUserHistory> records = userListeningRepository.findAllByUserIdLike(userId);
-//        return records.stream().map(
-//                data -> {
-//                    Optional<MongoListeningExam> returnTest = listeningExamRepository.findById(data.getTestId());
-//                    return returnTest
-//                            .map(mongoListeningExam ->
-//                                    data.toUserSimpleRecord(mongoListeningExam.getExamName()))
-//                            .orElse(null);
-//                }
-//        ).toList();
     }
 
     @Override

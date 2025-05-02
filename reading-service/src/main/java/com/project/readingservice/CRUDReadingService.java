@@ -1,20 +1,19 @@
 package com.project.readingservice;
 
 import com.project.common.dto.BasicExamDTO;
-import com.project.readingservice.external.data.*;
-import com.project.readingservice.external.errors.ReadingTestAlreadyExistsException;
+import com.project.readingservice.external.data.ReadingAnswer;
+import com.project.readingservice.external.data.ReadingExam;
 
 import java.util.List;
 
 public interface CRUDReadingService {
 
+    ReadingExam getReadingTestData(String id);
+
+    ReadingAnswer getAnswerTest(String testId);
+
     List<BasicExamDTO> listAllReadingTestName();
-    
-    AnswerData getAnswerTest(String testId);
 
-    ReadingTestData getReadingTestData(String id);
+    List<String> listAllTopics();
 
-    ReadingTestData createNewReadingTest(NewReadingTest newReadingTest) throws ReadingTestAlreadyExistsException;
-
-    void deleteReadingTest(String id);
 }

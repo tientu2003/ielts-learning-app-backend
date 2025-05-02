@@ -8,7 +8,7 @@ import java.util.List;
 
 @Data
 @Builder
-public class AnswerData {
+public class ReadingAnswer {
 
     String testId;
 
@@ -16,6 +16,9 @@ public class AnswerData {
 
     List<String> answers;
 
-    List<String> recommendations;
+    List<Integer> numberQuestions;
 
+    List<String> topics;
+
+    List<Double> difficulties;
 }

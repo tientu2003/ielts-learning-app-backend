@@ -1,16 +1,19 @@
 package com.project.readingservice.internal;
 
+import com.project.common.LanguageProficiencyService;
+import com.project.common.SuggestionService;
 import com.project.common.dto.BasicExamDTO;
 import com.project.common.dto.BasicUserRecordDTO;
 import com.project.common.dto.UserSummary;
 import com.project.readingservice.CRUDReadingService;
 import com.project.readingservice.UserReadingService;
-import com.project.readingservice.external.data.AnswerData;
-import com.project.readingservice.external.user.DetailReadingTestRecord;
+import com.project.readingservice.external.data.ReadingAnswer;
+import com.project.readingservice.external.user.DetailRecord;
 import com.project.readingservice.external.user.UserAnswer;
 import com.project.readingservice.external.util.ReadingScore;
 import com.project.readingservice.external.util.UserService;
 import com.project.readingservice.internal.model.user.UserAnswerHistory;
+import com.project.readingservice.internal.model.user.UserReadingRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
 @Slf4j
 @Service
@@ -35,46 +37,31 @@ public class UserReadingServiceImp implements UserReadingService {
 
     final UserService userService;
 
+    final SuggestionService suggestionService;
+
+    final LanguageProficiencyService languageProficiencyService;
+
     @Override
     @Transactional
-    public DetailReadingTestRecord saveUserAnswerData(UserAnswer userAnswer) {
+    public String saveUserAnswerData(UserAnswer userAnswer) {
         String userId = userService.getUserId();
-        log.info("User {} save user answer data", userId);
+        ReadingAnswer readingAnswer = crudReadingService.getAnswerTest(userAnswer.getTestId());
 
-        AnswerData testAnswer = crudReadingService.getAnswerTest(userAnswer.getTestId());
-
-        List<Boolean> result = readingScore.checkAnswerAndCalculateScore(userAnswer.getAnswers(), testAnswer.getAnswers());
+        List<Boolean> result = readingScore.checkAnswerAndCalculateScore(userAnswer.getAnswers(), readingAnswer.getAnswers());
 
         UserAnswerHistory newOne = userReadingRepository.insert(new UserAnswerHistory(userId,
-                userAnswer,
-                readingScore.getScore(),
-                result));
-
-        return newOne.toDetailReadingTestRecord(testAnswer);
+                userAnswer, readingScore.getScore(), result,readingAnswer));
+        return newOne.getId();
     }
 
     @Override
     public List<BasicUserRecordDTO> listUserReadingTestHistory() {
-
         String userId = userService.getUserId();
-
         return userReadingRepository.findAllByUserIdWithTestName(userId);
-
-//        List<UserAnswerHistory> datas = userReadingRepository.findAllByUserIdLike(userId);
-//
-//        return datas.stream().map(
-//                data -> {
-//                    Optional<MongoReadingTest> returnTest = readingTestRepository.findById(data.getTestId());
-//                    return returnTest
-//                            .map(mongoReadingTest ->
-//                                    data.toBasicReadingHistory(mongoReadingTest.getTestName()))
-//                            .orElse(null);
-//                }
-//        ).toList();
     }
 
     @Override
-    public DetailReadingTestRecord getUserDetailReadingTestHistory(String recordId) {
+    public DetailRecord getUserDetailReadingTestHistory(String recordId) {
         Optional<UserAnswerHistory> record = userReadingRepository.findById(recordId);
         return record.map(userAnswerHistory ->
                         userAnswerHistory.toDetailReadingTestRecord(crudReadingService
@@ -86,18 +73,16 @@ public class UserReadingServiceImp implements UserReadingService {
     @Override
     public UserSummary getReadingGeneralAssessment() {
         String userId = userService.getUserId();
-
         Double averageScore = userReadingRepository.calculateAverageScoreByUserId(userId);
-
-        // TODO do the personal and next suggestion here
-        List<BasicExamDTO> exams = crudReadingService.listAllReadingTestName();
-        BasicExamDTO nextTest = exams.isEmpty() ? null : exams.get(new Random().nextInt(exams.size()));
-
+        BasicExamDTO exam = suggestionService.getSuggestedNextExam();
         return UserSummary.builder()
             .userId(userId)
             .averageScore(averageScore)
-            .nextTestId(nextTest != null ? nextTest.getId() : null)
-            .testName(nextTest != null ? nextTest.getTestName() : null)
+            .nextTestId(exam.getId())
+            .testName(exam.getTestName())
+            .topics(languageProficiencyService.getAllTopicsByUserId())
+            .personalRecommendation(suggestionService.getPersonalRecommendation())
+            .skillLanguageProficiency(languageProficiencyService.getSkillProficiencyDTO())
             .build();
     }
 

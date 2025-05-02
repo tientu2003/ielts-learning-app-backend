@@ -1,15 +1,14 @@
 package com.project.readingservice;
 
+import com.project.common.LanguageProficiencyDTO;
+import com.project.common.LanguageProficiencyService;
 import com.project.common.dto.BasicUserRecordDTO;
 import com.project.common.dto.UserSummary;
-import com.project.readingservice.external.data.AnswerData;
-import com.project.readingservice.external.data.NewReadingTest;
-import com.project.readingservice.external.data.ReadingTestData;
-import com.project.readingservice.external.errors.ReadingTestAlreadyExistsException;
-import com.project.readingservice.external.user.DetailReadingTestRecord;
+import com.project.readingservice.external.data.ReadingAnswer;
+import com.project.readingservice.external.data.ReadingExam;
+import com.project.readingservice.external.user.DetailRecord;
 import com.project.readingservice.external.user.UserAnswer;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +17,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
-@Slf4j
 @RestController
 @RequestMapping("/api/reading")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -26,8 +24,9 @@ public class ReadingServiceApi {
 
     final CRUDReadingService crudReadingService;
     final UserReadingService userReadingService;
+    final LanguageProficiencyService languageProficiencyService;
 
-    @GetMapping("/user/review")
+    @GetMapping("/user/summary")
     public ResponseEntity<UserSummary> getGeneralAssessment() {
         UserSummary data = userReadingService.getReadingGeneralAssessment();
         return ResponseEntity.ok(data);
@@ -45,19 +44,18 @@ public class ReadingServiceApi {
 
     @PostMapping("/user/answer")
     public ResponseEntity<String> sendUserAnswer( @RequestBody UserAnswer userAnswer) {
-        DetailReadingTestRecord received =  userReadingService.saveUserAnswerData(userAnswer);
+        String received =  userReadingService.saveUserAnswerData(userAnswer);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequestUri()
                 .path("/{record-id}")
-                .buildAndExpand(received.getId())
+                .buildAndExpand(received)
                 .toUri();
-        log.info("New Reading Test Record: {}", location);
-        return ResponseEntity.created(location).body(received.getId());
+        return ResponseEntity.created(location).body(received);
     }
 
     @GetMapping("/user/answer/{record_id}")
-    public ResponseEntity<DetailReadingTestRecord> getDetailReadingAnswerRecord(@PathVariable("record_id") String record_id) {
-        DetailReadingTestRecord result = userReadingService.getUserDetailReadingTestHistory(record_id);
+    public ResponseEntity<DetailRecord> getDetailReadingAnswerRecord(@PathVariable("record_id") String record_id) {
+        DetailRecord result = userReadingService.getUserDetailReadingTestHistory(record_id);
         if(result == null) {
             return ResponseEntity.notFound().build();
         }else{
@@ -65,45 +63,38 @@ public class ReadingServiceApi {
         }
     }
 
-    @GetMapping("/answer/{id}")
-    public ResponseEntity<AnswerData> getAnswer(@PathVariable("id") String id){
-        log.info(id);
-        AnswerData answerData = crudReadingService.getAnswerTest(id);
-        if(answerData == null){
+    @GetMapping("/data/answer/{id}")
+    public ResponseEntity<ReadingAnswer> getAnswer(@PathVariable("id") String id){
+        ReadingAnswer readingAnswer = crudReadingService.getAnswerTest(id);
+        if(readingAnswer == null){
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(answerData);
+        return ResponseEntity.ok(readingAnswer);
     }
 
     @GetMapping("/data/{id}")
-    public ResponseEntity<ReadingTestData> getTestData(@PathVariable String id){
-        ReadingTestData readingTestData = crudReadingService.getReadingTestData(id);
-        if(readingTestData == null){
+    public ResponseEntity<ReadingExam> getTestData(@PathVariable String id){
+        ReadingExam readingExam = crudReadingService.getReadingTestData(id);
+        if(readingExam == null){
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(readingTestData);
+        return ResponseEntity.ok(readingExam);
     }
-
-    @PostMapping
-    public ResponseEntity<ReadingTestData> createNewReadingTest(@RequestBody NewReadingTest newReadingTest){
-        try{
-            ReadingTestData readingTestData = crudReadingService.createNewReadingTest(newReadingTest);
-
-            URI location = ServletUriComponentsBuilder
-                    .fromCurrentRequestUri()
-                    .path("/{test-name}")
-                    .buildAndExpand(readingTestData.getName())
-                    .toUri();
-
-            return ResponseEntity.created(location).build();
-        }catch (ReadingTestAlreadyExistsException e){
-            return ResponseEntity.badRequest().build();
+    @PostMapping("/user/tpi")
+    public ResponseEntity<List<LanguageProficiencyDTO>> searchTopicProficiency(@RequestBody List<String> topics) {
+        List<LanguageProficiencyDTO> list =  languageProficiencyService.getAllTopicProficiencyIndexs(topics);
+        if(list == null || list.isEmpty()){
+            return ResponseEntity.notFound().build();
         }
+        return ResponseEntity.ok(list);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReadingTest(@PathVariable String id){
-        crudReadingService.deleteReadingTest(id);
-        return ResponseEntity.noContent().build();
+    @GetMapping("/user/topic-list")
+    public ResponseEntity<List<String>> getUserListeningTopics() {
+        List<String> list = languageProficiencyService.getAllTopicsByUserId();
+        if(list == null || list.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(list);
     }
 }
