@@ -14,7 +14,7 @@ public class OpenApiConfig {
     public OpenAPI openAPI() {
         return new OpenAPI()
                 .info(new Info().title("Listening Service")
-                        .description("This is Rest API for Reading Service")
+                        .description("This is Rest API for Listening Service")
                         .version("v0.1")
                         .license(new License().name("Apache 2.0"))
                 ).addSecurityItem(new SecurityRequirement().addList("bearerAuth"))

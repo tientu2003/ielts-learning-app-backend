@@ -51,7 +51,6 @@ public class ListeningServiceApi {
                 .path("/{record-id}")
                 .buildAndExpand(received)
                 .toUri();
-        log.info("New Listening User Record: {}", location);
         return ResponseEntity.created(location).body(received);
     }
 
@@ -65,7 +64,7 @@ public class ListeningServiceApi {
         }
     }
 
-    @GetMapping("/answer/{id}")
+    @GetMapping("/data/answer/{id}")
     public ResponseEntity<ListeningAnswer> getAnswer(@PathVariable("id") String id){
         ListeningAnswer answerData = crudListeningService.getListeningAnswer(id);
         if(answerData == null){

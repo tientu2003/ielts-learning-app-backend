@@ -1,9 +1,8 @@
 package com.project.readingservice.internal.model.user;
 
 import com.project.common.TopicProficiency;
-import com.project.common.dto.BasicUserRecordDTO;
-import com.project.readingservice.external.data.AnswerData;
-import com.project.readingservice.external.user.DetailReadingTestRecord;
+import com.project.readingservice.external.data.ReadingAnswer;
+import com.project.readingservice.external.user.DetailRecord;
 import com.project.readingservice.external.user.UserAnswer;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -15,7 +14,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -44,8 +42,7 @@ public class UserAnswerHistory {
     private Date createdAt;
 
     @Field
-    @NotBlank
-    private Duration timeTaken;
+    private String timeTaken;
 
     @Field
     @NotBlank
@@ -65,7 +62,8 @@ public class UserAnswerHistory {
     public UserAnswerHistory(String userId,
                              UserAnswer userAnswer,
                              Double score,
-                             List<Boolean> check ){
+                             List<Boolean> check,
+                             ReadingAnswer readingAnswer ){
         this.userId = userId;
         this.testId = userAnswer.getTestId();
         this.score = score;
@@ -73,25 +71,52 @@ public class UserAnswerHistory {
         this.timeTaken = userAnswer.getTimeTaken();
         this.userAnswers = userAnswer.getAnswers();
         this.check = check;
+
+        List<TopicProficiency> topicProficiencies = new ArrayList<>();
+        int startIndex = 0;
+        List<Integer> noQuestionSession = readingAnswer.getNumberQuestions();
+        for (int i = 0; i < noQuestionSession.size() ; i++) {
+            int sessionSize = noQuestionSession.get(i);
+            List<Boolean> sessionCheck = check.subList(startIndex, startIndex + sessionSize);
+
+            double sessionAccuracy = sessionCheck.stream()
+                    .mapToDouble(correct -> correct ? 1.0 : 0.0)
+                    .average()
+                    .orElse(0.0);
+
+            TopicProficiency topicProficiency;
+            topicProficiency = TopicProficiency.builder()
+                    .topic(readingAnswer.getTopics().get(i))
+                    .skill(2) // 1 for Reading
+                    .difficulty(readingAnswer.getDifficulties().get(i))
+                    .bandWeight(TopicProficiency.bandWeight(score))
+                    .sessionWeight(TopicProficiency.calculateSessionWeight(i + 1))
+                    .accuracy(sessionAccuracy)
+                    .dateTaken(new Date())
+                    .build();
+            topicProficiencies.add(topicProficiency);
+            startIndex += sessionSize;
+        }
+
+        this.topicProficiency = topicProficiencies;
     }
 
-    public DetailReadingTestRecord toDetailReadingTestRecord(AnswerData answerData) {
-        return DetailReadingTestRecord.builder()
+    public DetailRecord toDetailReadingTestRecord(ReadingAnswer readingAnswer) {
+        return DetailRecord.builder()
                 .id(this.id)
                 .userId(this.userId)
                 .score(this.score)
-                .createAt(this.createdAt)
-                .timeTaken(this.timeTaken)
-                .answerData(answerData)
-                .userAnswers(createListResult())
+                .date(this.createdAt)
+                .answer(readingAnswer)
+                .results(createListResult())
                 .build();
     }
 
 
-    private List<DetailReadingTestRecord.Result> createListResult() {
-        List<DetailReadingTestRecord.Result> results = new ArrayList<>();
+    private List<DetailRecord.Result> createListResult() {
+        List<DetailRecord.Result> results = new ArrayList<>();
         IntStream.range(0, 40).forEach(index ->
-                results.add(DetailReadingTestRecord.Result.builder()
+                results.add(DetailRecord.Result.builder()
                         .check(this.check.get(index))
                         .userAnswer(this.userAnswers.get(index))
                         .build())
@@ -100,13 +125,4 @@ public class UserAnswerHistory {
     }
 
 
-    public BasicUserRecordDTO toBasicReadingHistory(String testName) {
-        return BasicUserRecordDTO.builder()
-                .id(this.id)
-                .name(testName)
-                .date(this.createdAt)
-                .score(this.score)
-                .topics(topicProficiency.stream().map(TopicProficiency::getTopic).toList())
-                .build();
-    }
 }

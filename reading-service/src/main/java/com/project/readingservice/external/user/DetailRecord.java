@@ -1,30 +1,28 @@
 package com.project.readingservice.external.user;
 
-import com.project.readingservice.external.data.AnswerData;
+import com.project.readingservice.external.data.ReadingAnswer;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.Duration;
 import java.util.Date;
 import java.util.List;
 
 @Builder
 @Data
-public class DetailReadingTestRecord {
+public class DetailRecord {
 
     private String id;
 
     private String userId;
 
-    private List<Result> userAnswers;
-
-    private AnswerData answerData;
-
-    private Duration timeTaken;
-
-    private Date createAt;
+    private ReadingAnswer answer;
 
     private Double score;
+
+    private List<Result> results;
+
+    private Date date;
+
 
     @Data
     @Builder

@@ -1,7 +1,6 @@
 package com.project.listeningservice.internal.model.user;
 
 import com.project.common.TopicProficiency;
-import com.project.common.dto.BasicUserRecordDTO;
 import com.project.listeningservice.external.data.ListeningAnswer;
 import com.project.listeningservice.external.user.DetailRecord;
 import com.project.listeningservice.external.user.UserAnswer;
@@ -56,8 +55,11 @@ public class MongoUserHistory {
     @Field
     private List<TopicProficiency> topicProficiency;
 
-    public MongoUserHistory(UserAnswer userAnswer, String userId, List<Boolean> check,
-                            Double score, ListeningAnswer listeningAnswer) {
+    public MongoUserHistory(UserAnswer userAnswer,
+                            String userId,
+                            List<Boolean> check,
+                            Double score,
+                            ListeningAnswer listeningAnswer) {
         this.userId = userId;
         this.check = check;
         this.score = score;
@@ -93,16 +95,6 @@ public class MongoUserHistory {
         }
     
         this.topicProficiency = topicProficiencies;
-    }
-
-    public BasicUserRecordDTO toUserSimpleRecord(String testName){
-            return BasicUserRecordDTO.builder()
-                    .id(this.id)
-                    .score(this.score)
-                    .name(testName)
-                    .date(this.createdAt)
-                    .topics(topicProficiency.stream().map(TopicProficiency::getTopic).toList())
-                    .build();
     }
 
     public DetailRecord toDetailRecord(ListeningAnswer listeningAnswer) {
