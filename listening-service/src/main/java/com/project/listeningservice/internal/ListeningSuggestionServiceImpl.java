@@ -19,7 +19,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class SuggestionServiceImpl implements SuggestionService {
+public class ListeningSuggestionServiceImpl implements SuggestionService {
 
     final UserService userService;
 
@@ -70,7 +70,7 @@ public class SuggestionServiceImpl implements SuggestionService {
 
         // Score each eligible exam based on multiple factors
         return eligibleExams.stream()
-                .map(exam -> new ExamScore(exam, calculateExamScore(exam, weakestTopics, topicProficiencies)))
+                .map(exam -> new ExamScore(exam, calculateExamScore(exam, weakestTopics, topicProficiencies, true)))
                 .max(Comparator.comparing(ExamScore::getScore))
                 .map(ExamScore::getExam)
                 .orElse(eligibleExams.getFirst());

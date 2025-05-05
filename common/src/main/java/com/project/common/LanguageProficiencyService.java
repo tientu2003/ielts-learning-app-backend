@@ -22,9 +22,8 @@ public abstract class LanguageProficiencyService {
         }
 
         double weightedVariance = sumSquaredDiff / sumWeights;
-        double weightedStdDev = Math.sqrt(weightedVariance);
 
-        return 1 - (weightedStdDev / 100);
+        return Math.sqrt(weightedVariance);
     }
 
     public abstract LanguageProficiencyDTO getSkillProficiencyDTO();

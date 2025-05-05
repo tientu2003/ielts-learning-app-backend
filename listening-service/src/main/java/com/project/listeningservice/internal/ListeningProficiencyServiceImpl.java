@@ -33,7 +33,7 @@ public class ListeningProficiencyServiceImpl extends LanguageProficiencyService 
         Double tpi = null;
         if(list != null && !list.isEmpty()) {
             tci = list.parallelStream().mapToDouble(LanguageProficiencyDTO::getTci).average().orElse(0.0);
-            tpi = list.parallelStream().mapToDouble(LanguageProficiencyDTO::getTci).average().orElse(0.0);
+            tpi = list.parallelStream().mapToDouble(LanguageProficiencyDTO::getTpi).average().orElse(0.0);
         }
 
         MetricAverage metrics = userListeningRepository.calculateAverageMetricsByUserId(userService.getUserId());
@@ -61,17 +61,16 @@ public class ListeningProficiencyServiceImpl extends LanguageProficiencyService 
         }
         List<TopicAverage> averages = userListeningRepository.calculateAverageScoreByUserIdGroupByTopic(userId);
 
-        Map<String, Double> averageMap = averages.stream()
+        Map<String, Double> averageMap = averages.parallelStream()
                 .collect(Collectors.toMap(TopicAverage::getTopic, TopicAverage::getAverageScore));
 
-        return topics.stream()
-                .map(topic -> getTopicProficiencyDTO(topic, averageMap.get(topic)))
+        return topics.parallelStream()
+                .map(topic -> getTopicProficiencyDTO(topic, averageMap.get(topic), userId))
                 .filter(Objects::nonNull)
                 .toList();
     }
 
-    private LanguageProficiencyDTO getTopicProficiencyDTO(String topic, Double averageScore) {
-        String userId = userService.getUserId();
+    private LanguageProficiencyDTO getTopicProficiencyDTO(String topic, Double averageScore, String userId) {
         List<TopicProficiency> topicProficiencies = userListeningRepository.findAllTopicProficiencyByUserIdAndTopic(userId, topic);
         Double averageDifficult = topicProficiencies.parallelStream().mapToDouble(TopicProficiency::getDifficulty).average().orElse(0.0);
         Double averageAccuracy = topicProficiencies.parallelStream().mapToDouble(TopicProficiency::getAccuracy).average().orElse(0.0);

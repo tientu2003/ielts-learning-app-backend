@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ReadingTestRepository extends MongoRepository<MongoReadingExam, String> {
 
-    @Query(value = "{}", fields = "{'_id': 1,'test_name': 1, 'topics': 1, 'levels': 1}")
+    @Query(value = "{}", fields = "{'_id': 1,'test_name': 1, 'topics': 1, 'levels': 1, 'difficulties': 1}")
     List<BasicInfoExam> findAllTestNames();
 
     @Aggregation(pipeline = {
