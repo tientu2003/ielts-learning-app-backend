@@ -50,6 +50,8 @@ jobs:
           --build-arg RESOURCESERVER_JWT_JWK_SET_URI="${{ secrets.RESOURCESERVER_JWT_JWK_SET_URI }}" \
           --build-arg EUREKA_SERVER_URL="${{ secrets.EUREKA_SERVER_URL }}" \
           --build-arg CORS_ORIGINS="${{ secrets.CORS_ORIGINS }}" \
+          --build-arg TOGETHER_API="${{ secrets.TOGETHER_API }}" \
+          --build-arg IELTS_SCORING_SERVICE="${{ secrets.IELTS_SCORING_SERVICE }}" \
           -t ${{ secrets.DOCKER_USERNAME }}/writing-service:latest -f writing-service/Dockerfile writing-service/
           docker push ${{ secrets.DOCKER_USERNAME }}/writing-service:latest
 
@@ -85,4 +87,6 @@ jobs:
             --env-vars SPRING_DATA_MONGODB_URI=${{ secrets.SPRING_DATA_MONGODB_URI }} \
                  SPRING_DATA_MONGODB_WRITING_DATABASE=${{ secrets.SPRING_DATA_MONGODB_WRITING_DATABASE }} \
                  RESOURCESERVER_JWT_JWK_SET_URI=${{ secrets.RESOURCESERVER_JWT_JWK_SET_URI }} \
-                 EUREKA_SERVER_URL=${{ secrets.EUREKA_SERVER_URL }}
+                 EUREKA_SERVER_URL=${{ secrets.EUREKA_SERVER_URL }} \
+                 TOGETHER_API=${{ secrets.TOGETHER_API }} \
+                 IELTS_SCORING_SERVICE=${{ secrets.IELTS_SCORING_SERVICE }}

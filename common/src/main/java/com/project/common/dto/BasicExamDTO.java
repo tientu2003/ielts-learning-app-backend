@@ -5,6 +5,7 @@ import com.project.common.constraints.CefrLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -12,9 +13,11 @@ import java.util.List;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @AllArgsConstructor
+@NoArgsConstructor
 public class BasicExamDTO {
     private String id;
     private String testName;
     private List<String> topics;
+    private List<Double> difficulties;
     private List<CefrLevel> levels;
 }

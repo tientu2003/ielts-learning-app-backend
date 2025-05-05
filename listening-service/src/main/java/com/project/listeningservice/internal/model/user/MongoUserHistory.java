@@ -85,8 +85,6 @@ public class MongoUserHistory {
                     .topic(listeningAnswer.getTopics().get(i))
                     .skill(1) // 1 for Listening
                     .difficulty(listeningAnswer.getDifficulties().get(i))
-                    .bandWeight(TopicProficiency.bandWeight(score))
-                    .sessionWeight(TopicProficiency.calculateSessionWeight(i + 1))
                     .accuracy(sessionAccuracy)
                     .dateTaken(new Date())
                     .build();

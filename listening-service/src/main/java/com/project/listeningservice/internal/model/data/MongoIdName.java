@@ -17,7 +17,10 @@ public class MongoIdName {
     private List<String> topics;
     @Field(name = "levels")
     private List<CefrLevel> levels;
+    @Field(name = "difficulties")
+    private List<Double> difficulties;
+
     public BasicExamDTO toIdName(){
-        return new BasicExamDTO(id, testName, topics, levels);
+        return new BasicExamDTO(id, testName, topics,difficulties, levels );
     }
 }

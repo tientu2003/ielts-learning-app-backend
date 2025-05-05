@@ -1,17 +1,23 @@
 package com.project.writingservice.internal;
 
+import com.project.common.LanguageProficiencyService;
+import com.project.common.SuggestionService;
+import com.project.common.dto.BasicExamDTO;
+import com.project.common.dto.BasicUserRecordDTO;
+import com.project.common.dto.UserSummary;
 import com.project.writingservice.CrudWritingService;
 import com.project.writingservice.UserWritingService;
-import com.project.writingservice.external.AiScoringServiceClient;
 import com.project.writingservice.external.UserService;
-import com.project.writingservice.external.data.IdName;
 import com.project.writingservice.external.data.WritingExam;
-import com.project.writingservice.external.user.*;
-import com.project.writingservice.internal.entity.MongoUserWritingRecord;
+import com.project.writingservice.external.user.DetailRecord;
+import com.project.writingservice.external.user.UserAnswer;
+import com.project.writingservice.internal.entity.data.WritingExamRepository;
+import com.project.writingservice.internal.entity.user.MongoUserWritingRecord;
+import com.project.writingservice.internal.entity.user.UserWritingRecordRepository;
+import com.project.writingservice.internal.util.AiService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,39 +28,31 @@ import java.util.Optional;
 @Slf4j
 public class UserWritingServiceImpl implements UserWritingService {
 
-    private final WritingExamRepository writingExamRepository;
+    final WritingExamRepository writingExamRepository;
 
-    private final UserWritingRecordRepository userWritingRecordRepository;
+    final UserWritingRecordRepository userWritingRecordRepository;
 
-    private final UserService userService;
+    final UserService userService;
 
-    private final AiScoringServiceClient client;
+    final CrudWritingService crudWritingService;
 
-    private final CrudWritingService crudWritingService;
+    final SuggestionService suggestionService;
+
+    final LanguageProficiencyService languageProficiencyService;
+
+    final AiService aiService;
 
     @Override
     public String createUserAnswer(UserAnswer userAnswer) {
         return writingExamRepository.findById(userAnswer.getExamId())
                 .map(exam -> {
-                    MongoUserWritingRecord newRecord = userWritingRecordRepository.save(new MongoUserWritingRecord(userAnswer, userService.getUserId()));
-                    if (exam.getTask() == 2) {
-                        sendUserAnswerToAi(newRecord.getId(),"Question", List.of("Answer"));
-                    }
-
+                    MongoUserWritingRecord newRecord = userWritingRecordRepository.save(new MongoUserWritingRecord(userAnswer, userService.getUserId(), exam.getTopic()));
+                    aiService.sendUserAnswerToAi(newRecord.getId(),exam.getContext(), userAnswer.getAnswer());
                     return newRecord.getId();
                 })
                 .orElse(null); // Return null if the exam is not found
     }
 
-    @Async
-    public void sendUserAnswerToAi(String recordId, String question, List<String> answer ) {
-        AiScoringRequest request = new AiScoringRequest(recordId, question, answer);
-        try{
-            client.evaluateUserAnswer(request);
-        }catch (Exception e){
-            log.error("Ai Scoring Process Failed: {}", e.getMessage());
-        }
-    }
 
 
     @Override
@@ -70,25 +68,23 @@ public class UserWritingServiceImpl implements UserWritingService {
     }
 
     @Override
-    public List<UserSimpleRecord> getAllUserHistoryRecords() {
-        return userWritingRecordRepository.findByUserIdLike(userService.getUserId()).parallelStream().map(e -> {
-//            String name =  writingExamRepository.getNameById(e.getExamId());
-            return e.toSimpleRecord("Test name"); // TODO missing name
-        }).toList();
+    public List<BasicUserRecordDTO> getAllUserHistoryRecords() {
+        String userId = userService.getUserId();
+        return userWritingRecordRepository.findAllByUserIdWithTestName(userId);
     }
 
     @Override
-    public WritingSummary getWritingSummary() {
+    public UserSummary getWritingSummary() {
         String userId = userService.getUserId();
-        List<MongoUserWritingRecord> list = userWritingRecordRepository.findByUserIdLike(userId);
-        Double averageScore = list.stream().mapToDouble(e -> e.getScore().getFinalScore()).average().orElse(0.0);
-        IdName nextExam = crudWritingService.getNextWritingExam();
-        return WritingSummary.builder()
-                .averageScore(averageScore)
-                .totalTime("NOT FINISH!!") // TODO
-                .nextTestId(nextExam.getId())
-                .testName(nextExam.getName())
-                .personalRecommendation("NO RECOMMENDATION!! NOT FINISH!!") // TODO
+        BasicExamDTO exam = suggestionService.getSuggestedNextExam();
+        return UserSummary.builder()
+                .userId(userId)
+                .averageScore(userWritingRecordRepository.getAverageFinalScoreByUserId(userId))
+                .nextTestId(exam.getId())
+                .testName(exam.getTestName())
+                .topics(languageProficiencyService.getAllTopicsByUserId())
+                .personalRecommendation(suggestionService.getPersonalRecommendation())
+                .skillLanguageProficiency(languageProficiencyService.getSkillProficiencyDTO())
                 .build();
     }
 }

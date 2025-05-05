@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.repository.Query;
 import java.util.List;
 
 public interface ListeningExamRepository extends MongoRepository<MongoListeningExam, String> {
-    @Query(value = "{}", fields = "{'_id': 1,'test_name': 1, 'topics': 1, 'levels': 1}")
+    @Query(value = "{}", fields = "{'_id': 1,'test_name': 1, 'topics': 1, 'difficulties': 1 ,'levels': 1}")
     List<MongoIdName> getAllIdNames();
 
     @Aggregation(pipeline = {

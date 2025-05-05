@@ -89,8 +89,6 @@ public class UserAnswerHistory {
                     .topic(readingAnswer.getTopics().get(i))
                     .skill(2) // 1 for Reading
                     .difficulty(readingAnswer.getDifficulties().get(i))
-                    .bandWeight(TopicProficiency.bandWeight(score))
-                    .sessionWeight(TopicProficiency.calculateSessionWeight(i + 1))
                     .accuracy(sessionAccuracy)
                     .dateTaken(new Date())
                     .build();

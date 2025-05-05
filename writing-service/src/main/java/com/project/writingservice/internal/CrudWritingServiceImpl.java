@@ -1,30 +1,26 @@
 package com.project.writingservice.internal;
 
 import com.project.writingservice.CrudWritingService;
-import com.project.writingservice.external.UserService;
-import com.project.writingservice.external.data.IdName;
+import com.project.writingservice.external.data.BasicWritingDTO;
 import com.project.writingservice.external.data.WritingExam;
-import com.project.writingservice.internal.entity.MongoWritingExam;
+import com.project.writingservice.internal.entity.data.MongoWritingExam;
+import com.project.writingservice.internal.entity.data.WritingExamRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CrudWritingServiceImpl implements CrudWritingService {
 
-    private final WritingExamRepository writingExamRepository;
-    private final UserService userService;
+    final WritingExamRepository writingExamRepository;
 
     @Override
-    public List<IdName> getListAllWritingExams() {
-        return writingExamRepository.findAll().parallelStream().map(writingExam ->
-                new IdName(writingExam.getId(),writingExam.getContext())
-        ).toList();
+    public List<BasicWritingDTO> getListAllWritingExams() {
+        return writingExamRepository.findAll().parallelStream().map(MongoWritingExam::toBasicExamDTO).toList();
     }
 
     @Override
@@ -38,12 +34,8 @@ public class CrudWritingServiceImpl implements CrudWritingService {
     }
 
     @Override
-    public IdName getNextWritingExam() {
-        // retrieve Id and Name of WritingExam Random from list
-        List<IdName> list = getListAllWritingExams();
-        Random random = new Random();
-        int randomIndex = random.nextInt(list.size());
-        return list.get(randomIndex);
+    public List<String> listAllTopics() {
+        return writingExamRepository.listAllTopics();
     }
 }
 

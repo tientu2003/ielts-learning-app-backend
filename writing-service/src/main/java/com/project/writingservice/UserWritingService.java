@@ -1,9 +1,9 @@
 package com.project.writingservice;
 
+import com.project.common.dto.BasicUserRecordDTO;
+import com.project.common.dto.UserSummary;
 import com.project.writingservice.external.user.DetailRecord;
 import com.project.writingservice.external.user.UserAnswer;
-import com.project.writingservice.external.user.UserSimpleRecord;
-import com.project.writingservice.external.user.WritingSummary;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ public interface UserWritingService {
 
     DetailRecord getUserAnswer(String id);
 
-    List<UserSimpleRecord> getAllUserHistoryRecords();
+    List<BasicUserRecordDTO> getAllUserHistoryRecords();
 
-    WritingSummary getWritingSummary();
+    UserSummary getWritingSummary();
 }

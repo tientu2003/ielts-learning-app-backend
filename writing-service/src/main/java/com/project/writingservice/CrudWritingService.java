@@ -1,16 +1,15 @@
 package com.project.writingservice;
 
-import com.project.writingservice.external.data.IdName;
+import com.project.writingservice.external.data.BasicWritingDTO;
 import com.project.writingservice.external.data.WritingExam;
 
 import java.util.List;
 
 public interface CrudWritingService {
 
-    List<IdName> getListAllWritingExams();
+    List<BasicWritingDTO> getListAllWritingExams();
 
     WritingExam getWritingExamById(String id);
 
-    IdName getNextWritingExam();
-    
+    List<String> listAllTopics();
 }

@@ -1,12 +1,11 @@
-package com.project.readingservice.internal;
+package com.project.writingservice.internal;
 
 import com.project.common.LanguageProficiencyDTO;
 import com.project.common.LanguageProficiencyService;
-import com.project.common.TopicProficiency;
-import com.project.common.dto.MetricAverage;
 import com.project.common.dto.TopicAverage;
-import com.project.readingservice.external.util.UserService;
-import com.project.readingservice.internal.model.user.UserReadingRepository;
+import com.project.writingservice.external.UserService;
+import com.project.writingservice.internal.entity.user.UserWritingRecordRepository;
+import com.project.writingservice.internal.util.WritingScore;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,9 +17,9 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class ReadingProficiencyServiceImpl extends LanguageProficiencyService {
+public class WritingProficiencyServiceImpl extends LanguageProficiencyService {
 
-    final UserReadingRepository userReadingRepository;
+    final UserWritingRecordRepository userWritingRecordRepository;
 
     final UserService userService;
 
@@ -33,31 +32,27 @@ public class ReadingProficiencyServiceImpl extends LanguageProficiencyService {
             tci = list.parallelStream().mapToDouble(LanguageProficiencyDTO::getTci).average().orElse(0.0);
             tpi = list.parallelStream().mapToDouble(LanguageProficiencyDTO::getTpi).average().orElse(0.0);
         }
-
-        MetricAverage metrics = userReadingRepository.calculateAverageMetricsByUserId(userService.getUserId());
+        Double average = userWritingRecordRepository.getAverageFinalScoreByUserId(userService.getUserId());
         return LanguageProficiencyDTO.builder()
                 .tci(tci)
                 .tpi(tpi)
-                .averageDifficulty(metrics == null ? 0.0 : metrics.getAverageDifficulty())
-                .averageScore(metrics == null ? 0.0 : metrics.getAverageScore())
-                .averageAccuracy(metrics == null ? 0.0 : metrics.getAverageAccuracy())
+                .averageScore(average == null ? 0.0 : average)
                 .build();
-
     }
 
     @Override
     public List<String> getAllTopicsByUserId() {
         String userId = userService.getUserId();
-        return userReadingRepository.findDistinctTopicsByUserId(userId);
+        return userWritingRecordRepository.findDistinctTopicsByUserId(userId);
     }
 
     @Override
     public List<LanguageProficiencyDTO> getAllTopicProficiencyIndexs(List<String> topics) {
         String userId = userService.getUserId();
         if(topics == null || topics.isEmpty()) {
-            topics = userReadingRepository.findDistinctTopicsByUserId(userId);
+            topics = userWritingRecordRepository.findDistinctTopicsByUserId(userId);
         }
-        List<TopicAverage> averages = userReadingRepository.calculateAverageScoreByUserIdGroupByTopic(userId);
+        List<TopicAverage> averages = userWritingRecordRepository.calculateAverageScoreByUserIdGroupByTopic(userId);
 
         Map<String, Double> averageMap = averages.parallelStream()
                 .collect(Collectors.toMap(TopicAverage::getTopic, TopicAverage::getAverageScore));
@@ -67,21 +62,29 @@ public class ReadingProficiencyServiceImpl extends LanguageProficiencyService {
                 .filter(Objects::nonNull)
                 .toList();    }
 
-
     private LanguageProficiencyDTO getTopicProficiencyDTO(String topic, Double averageScore, String userId) {
-        List<TopicProficiency> topicProficiencies = userReadingRepository.findAllTopicProficiencyByUserIdAndTopic(userId, topic);
-        Double averageDifficult = topicProficiencies.parallelStream().mapToDouble(TopicProficiency::getDifficulty).average().orElse(0.0);
-        Double averageAccuracy = topicProficiencies.parallelStream().mapToDouble(TopicProficiency::getAccuracy).average().orElse(0.0);
-
-        if(topicProficiencies.isEmpty()) return null;
-        Double tpi = topicProficiencyIndexCalculator(topicProficiencies);
+        List<WritingScore> writingScores = userWritingRecordRepository.findAllWritingScoreByUserIdAndTopic(userId, topic);
+        if(writingScores.isEmpty()) return null;
         return LanguageProficiencyDTO.builder()
                 .topic(topic)
-                .tpi(tpi)
-                .tci(topicConsistencyIndexCalculator(topicProficiencies,tpi))
-                .averageAccuracy(averageAccuracy)
+                .tpi(averageScore/9.0)
+                .tci(writingTciCalculator(writingScores,averageScore/9.0))
                 .averageScore(averageScore)
-                .averageDifficulty(averageDifficult)
                 .build();
     }
+
+    private Double writingTciCalculator(List<WritingScore> scores, Double mean) {
+        if (scores == null || scores.isEmpty()) {
+            return 0.0;
+        }
+        double sumSquaredDiff = scores.parallelStream().mapToDouble(e -> {
+            double diff = e.getFinalScore()/9.0 - mean;
+            return diff * diff;
+        }).sum();
+        double variance = sumSquaredDiff / scores.size();
+        double stdDeviation = Math.sqrt(variance);
+        return Math.round(stdDeviation * 1000.0) / 1000.0; // làm tròn đến 3 chữ số thập phân
+    }
+
+
 }

@@ -27,7 +27,10 @@ public class BasicInfoExam {
     @Field(name = "levels")
     private List<CefrLevel>  levels;
 
+    @Field(name = "difficulties")
+    private List<Double> difficulties;
+
     public BasicExamDTO toDTO() {
-        return new BasicExamDTO(id, testName, topics, levels);
+        return new BasicExamDTO(id, testName, topics, difficulties , levels);
     }
 }

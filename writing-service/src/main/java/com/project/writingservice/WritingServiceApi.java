@@ -1,10 +1,12 @@
 package com.project.writingservice;
 
+import com.project.common.LanguageProficiencyDTO;
+import com.project.common.LanguageProficiencyService;
+import com.project.common.dto.BasicUserRecordDTO;
+import com.project.common.dto.UserSummary;
 import com.project.writingservice.external.data.WritingExam;
 import com.project.writingservice.external.user.DetailRecord;
 import com.project.writingservice.external.user.UserAnswer;
-import com.project.writingservice.external.user.UserSimpleRecord;
-import com.project.writingservice.external.user.WritingSummary;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,20 +22,28 @@ import java.util.List;
 public class WritingServiceApi {
     private final CrudWritingService crudWritingService;
     private final UserWritingService userWritingService;
+    private final LanguageProficiencyService languageProficiencyService;
 
-    @GetMapping("/exam/{id}")
-    public ResponseEntity<WritingExam> getWritingExam(@PathVariable String id) {
-        WritingExam result = crudWritingService.getWritingExamById(id);
+    @GetMapping("/user/answer")
+    public ResponseEntity<List<BasicUserRecordDTO>> getHistory() {
+        List<BasicUserRecordDTO> list = userWritingService.getAllUserHistoryRecords();
+        if(list != null && !list.isEmpty()) {
+            return ResponseEntity.ok(list);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/user/summary")
+    public ResponseEntity<UserSummary> getWritingSummary() {
+        UserSummary result = userWritingService.getWritingSummary();
         if (result != null) {
             return ResponseEntity.ok(result);
         }
         return ResponseEntity.notFound().build();
     }
 
-
-    @PostMapping("/save")
+    @PostMapping("/user/answer")
     public ResponseEntity<String> saveUserAnswer(@RequestBody UserAnswer exam) {
-        log.info("Saving user answer: {}", exam);
         String url = userWritingService.createUserAnswer(exam);
         if(url != null) {
             return ResponseEntity.ok(url);
@@ -41,7 +51,7 @@ public class WritingServiceApi {
         return ResponseEntity.internalServerError().build();
     }
 
-    @GetMapping("/detail/{id}")
+    @GetMapping("/user/answer/{id}")
     public ResponseEntity<DetailRecord> getWritingExamDetail(@PathVariable String id) {
         DetailRecord result = userWritingService.getUserAnswer(id);
         if (result != null) {
@@ -50,21 +60,30 @@ public class WritingServiceApi {
         return ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/history")
-    public ResponseEntity<List<UserSimpleRecord>> getHistory() {
-        List<UserSimpleRecord> list = userWritingService.getAllUserHistoryRecords();
-        if(list != null && !list.isEmpty()) {
-            return ResponseEntity.ok(list);
-        }
-        return ResponseEntity.notFound().build();
-    }
 
-    @GetMapping("/summary")
-    public ResponseEntity<WritingSummary> getWritingSummary() {
-        WritingSummary result = userWritingService.getWritingSummary();
+    @GetMapping("/data/{id}")
+    public ResponseEntity<WritingExam> getWritingExam(@PathVariable String id) {
+        WritingExam result = crudWritingService.getWritingExamById(id);
         if (result != null) {
             return ResponseEntity.ok(result);
         }
         return ResponseEntity.notFound().build();
+    }
+    @PostMapping("/user/tpi")
+    public ResponseEntity<List<LanguageProficiencyDTO>> searchTopicProficiency(@RequestBody List<String> topics) {
+        List<LanguageProficiencyDTO> list =  languageProficiencyService.getAllTopicProficiencyIndexs(topics);
+        if(list == null || list.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(list);
+    }
+
+    @GetMapping("/user/topic-list")
+    public ResponseEntity<List<String>> getUserListeningTopics() {
+        List<String> list = languageProficiencyService.getAllTopicsByUserId();
+        if(list == null || list.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(list);
     }
 }

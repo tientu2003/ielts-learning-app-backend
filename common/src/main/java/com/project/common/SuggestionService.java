@@ -1,6 +1,5 @@
 package com.project.common;
 
-import com.project.common.constraints.CefrLevel;
 import com.project.common.dto.BasicExamDTO;
 
 import java.util.List;
@@ -22,12 +21,18 @@ public interface SuggestionService {
     }
 
     default double calculateExamScore(BasicExamDTO exam, List<String> weakestTopics,
-                                      List<LanguageProficiencyDTO> topicProficiencies) {
-        double topicMatchScore = calculateTopicMatchScore(exam.getTopics(), weakestTopics);
-        double difficultyScore = calculateDifficultyScore(exam.getLevels(), topicProficiencies);
+                                      List<LanguageProficiencyDTO> topicProficiencies, Boolean isDifficulty) {
 
-        // Combine scores with weights (can be adjusted)
-        return (topicMatchScore * 0.65) + (difficultyScore * 0.35);
+        double topicMatchScore = calculateTopicMatchScore(exam.getTopics(), weakestTopics);
+        if(isDifficulty) {
+            double difficultyScore = calculateDifficultyScore(exam.getDifficulties(), topicProficiencies);
+            // Combine scores with weights (can be adjusted)
+            return (topicMatchScore * 0.65) + (difficultyScore * 0.35);
+
+        }else {
+            return topicMatchScore;
+        }
+
     }
 
     default double calculateTopicMatchScore(List<String> examTopics, List<String> weakestTopics) {
@@ -37,7 +42,7 @@ public interface SuggestionService {
         return (double) matchingTopics / examTopics.size();
     }
 
-    default double calculateDifficultyScore(List<CefrLevel> examLevels,
+    default double calculateDifficultyScore(List<Double> examDifficulties,
                                             List<LanguageProficiencyDTO> topicProficiencies) {
         // Calculate average user proficiency
         double avgProficiency = topicProficiencies.stream()
@@ -46,26 +51,15 @@ public interface SuggestionService {
                 .orElse(0.0);
 
         // Convert CEFR levels to numerical values and get average
-        double examDifficulty = examLevels.stream()
-                .mapToDouble(this::cefrToNumericLevel)
+        double examDifficulty = examDifficulties.stream()
+                .mapToDouble(Double::doubleValue)
                 .average()
                 .orElse(0.0);
 
         // Calculate optimal difficulty (slightly above current level)
-        double optimalDifficulty = avgProficiency * 1.2;
+        double optimalDifficulty = avgProficiency * 1.05;
 
         // Return score based on how close the exam difficulty is to optimal difficulty
-        return 1.0 - Math.abs(examDifficulty - optimalDifficulty) / 6.0; // 6.0 is max CEFR difference
-    }
-
-    default double cefrToNumericLevel(CefrLevel level) {
-        return switch (level) {
-            case A1 -> 1.0;
-            case A2 -> 2.0;
-            case B1 -> 3.0;
-            case B2 -> 4.0;
-            case C1 -> 5.0;
-            case C2 -> 6.0;
-        };
+        return 1.0 - Math.abs(examDifficulty/0.743 - optimalDifficulty);
     }
 }

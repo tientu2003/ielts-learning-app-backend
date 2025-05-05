@@ -49,6 +49,7 @@ jobs:
           --build-arg RESOURCESERVER_JWT_JWK_SET_URI="${{ secrets.RESOURCESERVER_JWT_JWK_SET_URI }}" \
           --build-arg EUREKA_SERVER_URL="${{ secrets.EUREKA_SERVER_URL }}" \
           --build-arg CORS_ORIGINS="${{ secrets.CORS_ORIGINS }}" \
+          --build-arg TOGETHER_API="${{ secrets.TOGETHER_API }}" \
           -t ${{ secrets.DOCKER_USERNAME }}/reading-service:latest -f reading-service/Dockerfile reading-service/
           docker push ${{ secrets.DOCKER_USERNAME }}/reading-service:latest
 
@@ -84,4 +85,5 @@ jobs:
             --env-vars SPRING_DATA_MONGODB_URI=${{ secrets.SPRING_DATA_MONGODB_URI }} \
                  SPRING_DATA_MONGODB_READING_DATABASE=${{ secrets.SPRING_DATA_MONGODB_READING_DATABASE }} \
                  RESOURCESERVER_JWT_JWK_SET_URI=${{ secrets.RESOURCESERVER_JWT_JWK_SET_URI }} \
-                 EUREKA_SERVER_URL=${{ secrets.EUREKA_SERVER_URL }}
+                 EUREKA_SERVER_URL=${{ secrets.EUREKA_SERVER_URL }} \
+                 TOGETHER_API=${{ secrets.TOGETHER_API }}
