@@ -49,6 +49,7 @@ public class  MongoUserWritingRecord {
                 .context(writingExam.getContext())
                 .diagram_url(writingExam.getDiagram_url())
                 .task(writingExam.getTask())
+                .name(writingExam.getName())
                 .finalScore(this.score.getFinalScore())
                 .scores(this.score)
                 .duration(this.duration)
