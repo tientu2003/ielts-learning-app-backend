@@ -2,7 +2,6 @@ package com.project.readingservice.external.util;
 
 import com.project.common.dto.ChatRequest;
 import com.project.readingservice.config.TogetherAiClientConfig;
-import feign.Response;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,5 +10,5 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface TogetherAIClient {
 
     @PostMapping(value = "/v1/chat/completions", consumes = "application/json")
-    Response chatCompletion(@RequestBody ChatRequest request);
+    String chatCompletion(@RequestBody ChatRequest request);
 }

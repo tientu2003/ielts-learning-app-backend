@@ -1,5 +1,6 @@
 package com.project.writingservice.internal.util;
 
+import com.project.common.SuggestionService;
 import com.project.common.TopicProficiency;
 import com.project.writingservice.external.AiScoringServiceClient;
 import com.project.writingservice.external.user.AiScoringRequest;
@@ -23,7 +24,7 @@ public class AiService {
 
     private final AiScoringServiceClient client;
     private final UserWritingRecordRepository userWritingRecordRepository;
-
+    private final SuggestionService suggestionService;
 
     @Async
     public void sendUserAnswerToAi(String recordId, String question, List<String> answer ) {
@@ -38,6 +39,7 @@ public class AiService {
                         .build();
                 userWritingRecordRepository.save(userWritingRecord);
             });
+            suggestionService.generateNewRecommendation();
             log.info("Response AI: {}", response);
         } catch (HttpServerErrorException e) {
             if (e.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR) {
