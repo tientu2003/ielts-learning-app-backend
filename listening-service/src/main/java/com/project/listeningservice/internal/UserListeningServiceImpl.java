@@ -55,6 +55,7 @@ public class UserListeningServiceImpl implements UserListeningService {
         }
         MongoUserHistory newOne = userListeningRepository.insert(new MongoUserHistory(userAnswer, userId, check,
                listeningScore.getScore(count), listeningAnswer));
+        suggestionService.generateNewRecommendation();
         return newOne.getId();
     }
 

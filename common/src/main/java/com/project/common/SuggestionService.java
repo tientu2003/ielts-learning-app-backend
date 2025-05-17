@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface SuggestionService {
 
+    void generateNewRecommendation();
+
     String getPersonalRecommendation();
 
     BasicExamDTO getSuggestedNextExam();

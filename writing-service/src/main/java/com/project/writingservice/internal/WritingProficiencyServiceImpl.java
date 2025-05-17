@@ -83,7 +83,7 @@ public class WritingProficiencyServiceImpl extends LanguageProficiencyService {
         }).sum();
         double variance = sumSquaredDiff / scores.size();
         double stdDeviation = Math.sqrt(variance);
-        return Math.round(stdDeviation * 1000.0) / 1000.0; // làm tròn đến 3 chữ số thập phân
+        return 1 - Math.round(stdDeviation * 1000.0) / 1000.0; // làm tròn đến 3 chữ số thập phân
     }
 
 

@@ -51,6 +51,7 @@ public class UserReadingServiceImp implements UserReadingService {
 
         UserAnswerHistory newOne = userReadingRepository.insert(new UserAnswerHistory(userId,
                 userAnswer, readingScore.getScore(), result,readingAnswer));
+        suggestionService.generateNewRecommendation();
         return newOne.getId();
     }
 
