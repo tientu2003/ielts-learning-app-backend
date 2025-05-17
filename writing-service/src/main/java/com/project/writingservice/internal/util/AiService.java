@@ -48,7 +48,7 @@ public class AiService {
                 log.error("AI Scoring Process Failed with status {}: {}", e.getStatusCode(), e.getResponseBodyAsString());
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("AI Scoring Process Failed with Unknown Error {}: {}", e.getMessage(), e.getCause() != null ? e.getCause().getMessage() : "Unknown");
         }
 
     }
