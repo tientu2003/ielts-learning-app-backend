@@ -1,0 +1,89 @@
+name: Deploy Speaking Service Server to Azure
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - speaking-service/Dockerfile
+      - speaking-service/pom.xml
+      - speaking-service/src/**
+      - common/src/**
+      - common/pom.xml
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          architecture: 'x64'
+
+      - name: Build parent-project
+        run: mvn clean install -DskipTests
+
+      - name: Build with Maven
+        run: mvn -B package -DskipTests --file speaking-service/pom.xml
+
+      # Step 3: Log in to Docker Hub
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # Step 4: Build and push Docker image to Docker Hub
+      - name: Build and push Docker image
+        run: |
+          docker buildx build \
+          --build-arg SPRING_DATA_MONGODB_URI="${{ secrets.SPRING_DATA_MONGODB_URI }}" \
+          --build-arg SPRING_DATA_MONGODB_SPEAKING_DATABASE="${{ secrets.SPRING_DATA_MONGODB_SPEAKING_DATABASE }}" \
+          --build-arg RESOURCESERVER_JWT_JWK_SET_URI="${{ secrets.RESOURCESERVER_JWT_JWK_SET_URI }}" \
+          --build-arg EUREKA_SERVER_URL="${{ secrets.EUREKA_SERVER_URL }}" \
+          --build-arg CORS_ORIGINS="${{ secrets.CORS_ORIGINS }}" \
+          --build-arg TOGETHER_API="${{ secrets.TOGETHER_API }}" \
+          -t ${{ secrets.DOCKER_USERNAME }}/speaking-service:latest -f speaking-service/Dockerfile speaking-service/
+          docker push ${{ secrets.DOCKER_USERNAME }}/speaking-service:latest
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build-and-push
+
+    steps:
+      # Step 1: Log in to Azure
+      - name: Log in to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # Step 2: Deploy to Azure Container App
+      - name: Deploy to Azure Container App
+        run: |
+          RESOURCE_GROUP=${{secrets.AZURE_RESOURCE_GROUP}}
+          CONTAINER_APP_NAME="speaking-service-noideatt-app"
+          LOCATION="southeastasia"
+          
+          # Deploy the Docker image to Azure Container App
+          az containerapp create \
+            --name $CONTAINER_APP_NAME \
+            --resource-group $RESOURCE_GROUP \
+            --image ${{ secrets.DOCKER_USERNAME }}/speaking-service:latest \
+            --cpu 0.25 --memory 0.5Gi \
+            --environment ${{secrets.AZURE_CONTAINERAPPS_ENVIRONMENT}} \
+            --min-replicas 0 \
+            --max-replicas 1 \
+            --ingress external \
+            --target-port 8082 \
+            --env-vars SPRING_DATA_MONGODB_URI=${{ secrets.SPRING_DATA_MONGODB_URI }} \
+                 SPRING_DATA_MONGODB_SPEAKING_DATABASE=${{ secrets.SPRING_DATA_MONGODB_SPEAKING_DATABASE }} \
+                 RESOURCESERVER_JWT_JWK_SET_URI=${{ secrets.RESOURCESERVER_JWT_JWK_SET_URI }} \
+                 EUREKA_SERVER_URL=${{ secrets.EUREKA_SERVER_URL }} \
+                 TOGETHER_API=${{ secrets.TOGETHER_API }}
