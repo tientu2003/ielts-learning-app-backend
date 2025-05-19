@@ -46,7 +46,7 @@ public class MongoUserHistory {
     @AllArgsConstructor
     public static class MongoUserAnswerDetail{
         @Field
-        private String number;
+        private Integer number;
         @Field
         private String topic;
         @Field
