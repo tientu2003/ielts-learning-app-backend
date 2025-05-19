@@ -36,7 +36,7 @@ public class MongoSpeakingExam {
     @NoArgsConstructor
     public static class MongoIdQuestion{
         @Field
-        private String number;
+        private Integer number;
         @Field
         private String question;
     }

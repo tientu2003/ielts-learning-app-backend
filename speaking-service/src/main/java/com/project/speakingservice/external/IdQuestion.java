@@ -8,7 +8,7 @@ import lombok.Data;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class IdQuestion {
-    private String number;
+    private Integer number;
     private String topic;
     private String question;
     private String url;

@@ -19,7 +19,7 @@ public class DetailRecord {
     @Data
     @Builder
     public static class UserAnswerDetail {
-        private String number;
+        private Integer number;
         private String topic;
         private String question;
         private String url;
