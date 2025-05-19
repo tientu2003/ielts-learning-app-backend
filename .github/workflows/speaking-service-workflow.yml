@@ -81,7 +81,7 @@ jobs:
             --min-replicas 0 \
             --max-replicas 1 \
             --ingress external \
-            --target-port 8082 \
+            --target-port 8084 \
             --env-vars SPRING_DATA_MONGODB_URI=${{ secrets.SPRING_DATA_MONGODB_URI }} \
                  SPRING_DATA_MONGODB_SPEAKING_DATABASE=${{ secrets.SPRING_DATA_MONGODB_SPEAKING_DATABASE }} \
                  RESOURCESERVER_JWT_JWK_SET_URI=${{ secrets.RESOURCESERVER_JWT_JWK_SET_URI }} \
