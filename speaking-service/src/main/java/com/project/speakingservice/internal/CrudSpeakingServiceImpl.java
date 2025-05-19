@@ -29,15 +29,15 @@ public class CrudSpeakingServiceImpl implements CrudSpeakingService {
 
         List<BasicExamDTO> result = new ArrayList<>();
 
-        for (MongoSpeakingExam one : partOne) {
-            for (MongoSpeakingExam two : partTwo) {
+        partOne.parallelStream().forEach(one -> {
+            partTwo.parallelStream().forEach(two -> {
                 result.add(BasicExamDTO.builder()
                         .id(one.getId() + "_" + two.getId())
                         .testName("Speaking Test: " + one.getTopic() + " - " + two.getTopic())
                         .topics(List.of(one.getTopic(), two.getTopic()))
                         .build());
-            }
-        }
+            });
+        });
         return result;
     }
     
@@ -59,9 +59,9 @@ public class CrudSpeakingServiceImpl implements CrudSpeakingService {
                                 .build())
                         .toList())
                 .partTwo(IdQuestion.builder()
-                        .number(partTwo.getQuestionsTwo().getNumber())
+                        .number(1)
                         .topic(partTwo.getTopic())
-                        .question(partTwo.getQuestionsTwo().getQuestion())
+                        .question(partTwo.getQuestionsTwo())
                         .build())
                 .partThree(partTwo.getQuestionsThree().stream()
                         .map(q -> IdQuestion.builder()

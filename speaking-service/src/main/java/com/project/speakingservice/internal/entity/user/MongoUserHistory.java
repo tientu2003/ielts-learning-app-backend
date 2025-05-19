@@ -44,6 +44,7 @@ public class MongoUserHistory {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
+    @Document(collection = "speaking_user")
     public static class MongoUserAnswerDetail{
         @Field
         private Integer number;
