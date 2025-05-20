@@ -53,6 +53,7 @@ public class MongoSpeakingExam {
     public SpeakingExam toSpeakingExam(){
         return SpeakingExam.builder()
                 .id(this.id)
+                .type(this.type)
                 .partOne(this.questionsOne.stream()
                         .map(q -> IdQuestion.builder()
                                 .number(q.getNumber())
