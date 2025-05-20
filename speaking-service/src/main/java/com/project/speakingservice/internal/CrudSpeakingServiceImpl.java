@@ -25,7 +25,7 @@ public class CrudSpeakingServiceImpl implements CrudSpeakingService {
 
     @Override
     public SpeakingExam getSpeakingExamById(String id) {
-        MongoSpeakingExam exam = mongoSpeakingExamRepository.findById(id).orElseThrow(null);
+        MongoSpeakingExam exam = mongoSpeakingExamRepository.findById(id).orElse(null);
         if(exam == null) {
             return null;
         }
