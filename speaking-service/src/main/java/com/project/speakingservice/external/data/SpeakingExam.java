@@ -10,6 +10,7 @@ import java.util.List;
 @Builder
 public class SpeakingExam {
     private String id;
+    private String testName;
     private Integer type;
     List<IdQuestion> partOne;
     IdQuestion  partTwo;
