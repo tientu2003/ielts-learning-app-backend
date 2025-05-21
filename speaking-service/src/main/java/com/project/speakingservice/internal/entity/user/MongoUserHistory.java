@@ -63,7 +63,11 @@ public class MongoUserHistory {
         this.answersOne = userAnswer.getAnswersOne().stream().map( e ->
                 new MongoUserAnswerDetail(e.getNumber(),e.getTopic(), e.getQuestion(), e.getUrl())).toList();
         IdQuestion partTwo = userAnswer.getAnswersTwo();
-        this.answersTwo = new MongoUserAnswerDetail(partTwo.getNumber(),partTwo.getTopic(), partTwo.getQuestion(), partTwo.getUrl()); 
+        if(partTwo == null || partTwo.getUrl() == null || partTwo.getUrl().isBlank()){
+            this.answersTwo = null;
+        }else{
+            this.answersTwo = new MongoUserAnswerDetail(partTwo.getNumber(),partTwo.getTopic(), partTwo.getQuestion(), partTwo.getUrl());
+        }
         this.answersThree = userAnswer.getAnswersThree().stream().map( e ->
                 new MongoUserAnswerDetail(e.getNumber(),e.getTopic(), e.getQuestion(), e.getUrl())).toList();
     }
