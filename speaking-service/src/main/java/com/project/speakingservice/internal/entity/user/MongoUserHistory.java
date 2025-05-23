@@ -13,6 +13,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 @Data
@@ -80,8 +81,9 @@ public class MongoUserHistory {
                 .name(this.testName)
                 .topics(Stream.of(
                                 answersOne.parallelStream().map(MongoUserAnswerDetail::getTopic),
-                                Stream.of(answersTwo).map(MongoUserAnswerDetail::getTopic),
+                                answersTwo != null? Stream.of (answersTwo).map(MongoUserAnswerDetail::getTopic): null,
                                 answersThree.parallelStream().map(MongoUserAnswerDetail::getTopic))
+                        .filter(Objects::nonNull)
                         .flatMap(s -> s)
                         .distinct()
                         .toList())
@@ -101,7 +103,7 @@ public class MongoUserHistory {
                                 .url(a.getUrl())
                                 .build())
                         .toList())
-                .partTwo(this.answersTwo == null ? DetailRecord.UserAnswerDetail.builder()
+                .partTwo(this.answersTwo != null ? DetailRecord.UserAnswerDetail.builder()
                         .number(this.answersTwo.getNumber())
                         .topic(this.answersTwo.getTopic())
                         .question(this.answersTwo.getQuestion())
