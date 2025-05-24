@@ -1,4 +1,4 @@
-package com.project.listeningservice.external.util;
+package com.project.listeningservice.internal.util;
 
 import com.project.common.dto.ChatRequest;
 import com.project.listeningservice.config.TogetherAiClientConfig;

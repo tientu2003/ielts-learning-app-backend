@@ -2,7 +2,6 @@ package com.project.writingservice.internal.util;
 
 import com.project.common.SuggestionService;
 import com.project.common.TopicProficiency;
-import com.project.writingservice.external.AiScoringServiceClient;
 import com.project.writingservice.external.user.AiScoringRequest;
 import com.project.writingservice.internal.entity.user.MongoUserWritingRecord;
 import com.project.writingservice.internal.entity.user.UserWritingRecordRepository;

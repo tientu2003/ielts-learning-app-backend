@@ -1,4 +1,4 @@
-package com.project.writingservice.external;
+package com.project.writingservice.internal.util;
 
 import com.project.common.dto.ChatRequest;
 import com.project.writingservice.config.TogetherAiClientConfig;

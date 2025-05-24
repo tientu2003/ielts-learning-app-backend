@@ -1,4 +1,4 @@
-package com.project.writingservice.external;
+package com.project.readingservice.internal.util;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
