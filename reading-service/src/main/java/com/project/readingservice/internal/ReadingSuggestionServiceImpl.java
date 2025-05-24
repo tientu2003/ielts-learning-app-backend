@@ -7,8 +7,8 @@ import com.project.common.dto.BasicExamDTO;
 import com.project.common.dto.ChatMessage;
 import com.project.common.dto.ChatRequest;
 import com.project.readingservice.CRUDReadingService;
-import com.project.readingservice.external.util.TogetherAIClient;
-import com.project.readingservice.external.util.UserService;
+import com.project.readingservice.internal.util.TogetherAIClient;
+import com.project.readingservice.internal.util.UserService;
 import com.project.readingservice.internal.model.user.AiSuggestion;
 import com.project.readingservice.internal.model.user.AiSuggestionRepository;
 import com.project.readingservice.internal.model.user.UserReadingRepository;
@@ -89,7 +89,11 @@ public class ReadingSuggestionServiceImpl implements SuggestionService {
 
     @Override
     public String getPersonalRecommendation() {
-        return aiSuggestionRepository.findByUserIdWithLastestDate(userService.getUserId()).getSuggestion();
+        AiSuggestion results =  aiSuggestionRepository.findByUserIdWithLastestDate(userService.getUserId());
+        if(results == null) {
+            return "";
+        }
+        return results.getSuggestion();
     }
 
     @Override

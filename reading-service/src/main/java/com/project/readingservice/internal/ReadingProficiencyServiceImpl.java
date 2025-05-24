@@ -5,7 +5,7 @@ import com.project.common.LanguageProficiencyService;
 import com.project.common.TopicProficiency;
 import com.project.common.dto.MetricAverage;
 import com.project.common.dto.TopicAverage;
-import com.project.readingservice.external.util.UserService;
+import com.project.readingservice.internal.util.UserService;
 import com.project.readingservice.internal.model.user.UserReadingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

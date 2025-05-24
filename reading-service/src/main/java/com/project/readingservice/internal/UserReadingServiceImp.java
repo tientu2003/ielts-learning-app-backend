@@ -11,7 +11,7 @@ import com.project.readingservice.external.data.ReadingAnswer;
 import com.project.readingservice.external.user.DetailRecord;
 import com.project.readingservice.external.user.UserAnswer;
 import com.project.readingservice.external.util.ReadingScore;
-import com.project.readingservice.external.util.UserService;
+import com.project.readingservice.internal.util.UserService;
 import com.project.readingservice.internal.model.user.UserAnswerHistory;
 import com.project.readingservice.internal.model.user.UserReadingRepository;
 import lombok.RequiredArgsConstructor;

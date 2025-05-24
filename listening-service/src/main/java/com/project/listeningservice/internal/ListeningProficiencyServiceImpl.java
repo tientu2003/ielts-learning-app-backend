@@ -5,7 +5,7 @@ import com.project.common.LanguageProficiencyService;
 import com.project.common.TopicProficiency;
 import com.project.common.dto.MetricAverage;
 import com.project.common.dto.TopicAverage;
-import com.project.listeningservice.external.util.UserService;
+import com.project.listeningservice.internal.util.UserService;
 import com.project.listeningservice.internal.model.user.UserListeningRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,8 +1,7 @@
-package com.project.writingservice.external;
+package com.project.writingservice.internal.util;
 
 import com.project.writingservice.config.HuggingSpaceClientConfig;
 import com.project.writingservice.external.user.AiScoringRequest;
-import com.project.writingservice.internal.util.WritingScore;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

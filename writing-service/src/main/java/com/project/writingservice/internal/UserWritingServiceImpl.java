@@ -7,7 +7,7 @@ import com.project.common.dto.BasicUserRecordDTO;
 import com.project.common.dto.UserSummary;
 import com.project.writingservice.CrudWritingService;
 import com.project.writingservice.UserWritingService;
-import com.project.writingservice.external.UserService;
+import com.project.writingservice.internal.util.UserService;
 import com.project.writingservice.external.data.WritingExam;
 import com.project.writingservice.external.user.DetailRecord;
 import com.project.writingservice.external.user.UserAnswer;

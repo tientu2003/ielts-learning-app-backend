@@ -3,7 +3,7 @@ package com.project.writingservice.internal;
 import com.project.common.LanguageProficiencyDTO;
 import com.project.common.LanguageProficiencyService;
 import com.project.common.dto.TopicAverage;
-import com.project.writingservice.external.UserService;
+import com.project.writingservice.internal.util.UserService;
 import com.project.writingservice.internal.entity.user.UserWritingRecordRepository;
 import com.project.writingservice.internal.util.WritingScore;
 import lombok.RequiredArgsConstructor;

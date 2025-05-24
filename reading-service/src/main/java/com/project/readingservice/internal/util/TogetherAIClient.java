@@ -1,4 +1,4 @@
-package com.project.readingservice.external.util;
+package com.project.readingservice.internal.util;
 
 import com.project.common.dto.ChatRequest;
 import com.project.readingservice.config.TogetherAiClientConfig;

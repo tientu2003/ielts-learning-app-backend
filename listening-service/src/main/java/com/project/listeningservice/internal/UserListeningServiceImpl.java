@@ -11,7 +11,7 @@ import com.project.listeningservice.external.data.ListeningAnswer;
 import com.project.listeningservice.external.user.DetailRecord;
 import com.project.listeningservice.external.user.UserAnswer;
 import com.project.listeningservice.external.util.ListeningScore;
-import com.project.listeningservice.external.util.UserService;
+import com.project.listeningservice.internal.util.UserService;
 import com.project.listeningservice.internal.model.user.MongoUserHistory;
 import com.project.listeningservice.internal.model.user.UserListeningRepository;
 import lombok.RequiredArgsConstructor;

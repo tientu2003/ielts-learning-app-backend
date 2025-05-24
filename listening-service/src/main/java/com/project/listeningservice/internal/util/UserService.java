@@ -1,4 +1,4 @@
-package com.project.listeningservice.external.util;
+package com.project.listeningservice.internal.util;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

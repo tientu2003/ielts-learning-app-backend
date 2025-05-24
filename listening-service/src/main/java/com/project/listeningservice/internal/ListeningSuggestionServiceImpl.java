@@ -7,8 +7,8 @@ import com.project.common.dto.BasicExamDTO;
 import com.project.common.dto.ChatMessage;
 import com.project.common.dto.ChatRequest;
 import com.project.listeningservice.CrudListeningService;
-import com.project.listeningservice.external.util.TogetherAIClient;
-import com.project.listeningservice.external.util.UserService;
+import com.project.listeningservice.internal.util.TogetherAIClient;
+import com.project.listeningservice.internal.util.UserService;
 import com.project.listeningservice.internal.model.user.AiSuggestion;
 import com.project.listeningservice.internal.model.user.AiSuggestionRepository;
 import com.project.listeningservice.internal.model.user.UserListeningRepository;
@@ -88,7 +88,11 @@ public class ListeningSuggestionServiceImpl implements SuggestionService {
 
     @Override
     public String getPersonalRecommendation() {
-        return aiSuggestionRepository.findByUserIdWithLastestDate(userService.getUserId()).getSuggestion();
+        AiSuggestion results =  aiSuggestionRepository.findByUserIdWithLastestDate(userService.getUserId());
+        if(results == null) {
+            return "";
+        }
+        return results.getSuggestion();
     }
 
     @Override
