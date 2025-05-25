@@ -6,14 +6,14 @@ import com.project.common.SuggestionService;
 import com.project.common.dto.BasicExamDTO;
 import com.project.common.dto.ChatMessage;
 import com.project.common.dto.ChatRequest;
+import com.project.common.dto.TogetherAIResponse;
 import com.project.listeningservice.CrudListeningService;
-import com.project.listeningservice.internal.util.TogetherAIClient;
-import com.project.listeningservice.internal.util.UserService;
 import com.project.listeningservice.internal.model.user.AiSuggestion;
 import com.project.listeningservice.internal.model.user.AiSuggestionRepository;
 import com.project.listeningservice.internal.model.user.UserListeningRepository;
+import com.project.listeningservice.internal.util.TogetherAIClient;
+import com.project.listeningservice.internal.util.UserService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +23,6 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ListeningSuggestionServiceImpl implements SuggestionService {
@@ -61,17 +60,17 @@ public class ListeningSuggestionServiceImpl implements SuggestionService {
                 
                 Present the evaluation in a clear, friendly, and motivational tone to encourage the user to keep learning and improving.
                 """;
-        List<ChatMessage> messages = List.of(new ChatMessage(prompt, constructContent()));
-        ChatRequest request = new ChatRequest(model, messages, true);
-        String response = client.chatCompletion(request);
+        List<ChatMessage> messages = List.of(
+                new ChatMessage("system", prompt),
+                new ChatMessage("user", constructContent()));
+        ChatRequest request = new ChatRequest(model, messages, false);
+        TogetherAIResponse response = client.chatCompletion(request);
 
-        log.error("response: {}", response);
-
-        if (response != null && !response.isBlank()) {
+        if (response != null) {
             aiSuggestionRepository.save(AiSuggestion.builder()
                     .userId(userService.getUserId())
                     .createdAt(new Date())
-                    .suggestion(response)
+                    .suggestion(response.getChoices().getFirst().getMessage().getContent())
                     .build());
         }
     }
