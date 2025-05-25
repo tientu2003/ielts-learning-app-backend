@@ -13,6 +13,7 @@ import com.project.listeningservice.internal.model.user.AiSuggestion;
 import com.project.listeningservice.internal.model.user.AiSuggestionRepository;
 import com.project.listeningservice.internal.model.user.UserListeningRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ListeningSuggestionServiceImpl implements SuggestionService {
@@ -41,7 +43,7 @@ public class ListeningSuggestionServiceImpl implements SuggestionService {
     @Override
     public void generateNewRecommendation() {
 
-        String model = "meta-llama/Llama-3.3-70B-Instruct-Turbo-Free";
+            String model = "meta-llama/Llama-3.3-70B-Instruct-Turbo-Free";
         String prompt = """
                 You are an expert English language tutor. Analyze the user's English Listening performance across different topics and provide personalized recommendations to improve listening skill.
                 
@@ -62,6 +64,8 @@ public class ListeningSuggestionServiceImpl implements SuggestionService {
         List<ChatMessage> messages = List.of(new ChatMessage(prompt, constructContent()));
         ChatRequest request = new ChatRequest(model, messages, true);
         String response = client.chatCompletion(request);
+
+        log.error("response: {}", response);
 
         if (response != null && !response.isBlank()) {
             aiSuggestionRepository.save(AiSuggestion.builder()

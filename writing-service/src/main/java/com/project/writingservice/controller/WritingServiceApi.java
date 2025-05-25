@@ -1,9 +1,11 @@
-package com.project.writingservice;
+package com.project.writingservice.controller;
 
 import com.project.common.LanguageProficiencyDTO;
 import com.project.common.LanguageProficiencyService;
 import com.project.common.dto.BasicUserRecordDTO;
 import com.project.common.dto.UserSummary;
+import com.project.writingservice.CrudWritingService;
+import com.project.writingservice.UserWritingService;
 import com.project.writingservice.external.data.WritingExam;
 import com.project.writingservice.external.user.DetailRecord;
 import com.project.writingservice.external.user.UserAnswer;
