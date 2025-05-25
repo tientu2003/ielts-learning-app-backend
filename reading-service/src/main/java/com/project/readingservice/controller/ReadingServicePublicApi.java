@@ -1,6 +1,7 @@
-package com.project.readingservice;
+package com.project.readingservice.controller;
 
 import com.project.common.dto.BasicExamDTO;
+import com.project.readingservice.CRUDReadingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

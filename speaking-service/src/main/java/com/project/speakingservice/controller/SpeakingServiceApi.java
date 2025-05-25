@@ -1,6 +1,8 @@
-package com.project.speakingservice;
+package com.project.speakingservice.controller;
 
 import com.project.common.dto.BasicUserRecordDTO;
+import com.project.speakingservice.CrudSpeakingService;
+import com.project.speakingservice.UserSpeakingService;
 import com.project.speakingservice.external.data.SpeakingExam;
 import com.project.speakingservice.external.user.DetailRecord;
 import com.project.speakingservice.external.user.UserAnswer;

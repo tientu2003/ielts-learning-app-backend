@@ -1,6 +1,7 @@
-package com.project.speakingservice;
+package com.project.writingservice.controller;
 
-import com.project.common.dto.BasicExamDTO;
+import com.project.writingservice.CrudWritingService;
+import com.project.writingservice.external.data.BasicWritingDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,14 +13,14 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/public/api/speaking")
+@RequestMapping("/public/api/writing")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class SpeakingServicePublicApi {
-    final CrudSpeakingService crudSpeakingService;
+public class WritingServicePublicApi {
+    private final CrudWritingService crudWritingService;
 
     @GetMapping("/list")
-    public ResponseEntity<List<BasicExamDTO>> getAllSpeakingTests(){
-        List<BasicExamDTO> data = crudSpeakingService.listAllSpeakingExam();
+    public ResponseEntity<List<BasicWritingDTO>> listAllWritingExams() {
+        List<BasicWritingDTO> data = crudWritingService.getListAllWritingExams();
         if(data == null || data.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -28,10 +29,11 @@ public class SpeakingServicePublicApi {
 
     @GetMapping("/data/topic-list")
     public ResponseEntity<List<String>> listAllWritingTopics() {
-        List<String> data = crudSpeakingService.listAllTopics();
+        List<String> data = crudWritingService.listAllTopics();
         if(data == null || data.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.ok(data);
     }
+
 }

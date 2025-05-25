@@ -1,6 +1,7 @@
 package com.project.listeningservice.internal.util;
 
 import com.project.common.dto.ChatRequest;
+import com.project.common.dto.TogetherAIResponse;
 import com.project.listeningservice.config.TogetherAiClientConfig;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,5 +11,5 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface TogetherAIClient {
 
     @PostMapping(value = "/v1/chat/completions", consumes = "application/json")
-    String chatCompletion(@RequestBody ChatRequest request);
+    TogetherAIResponse chatCompletion(@RequestBody ChatRequest request);
 }

@@ -6,6 +6,7 @@ import com.project.common.SuggestionService;
 import com.project.common.dto.BasicExamDTO;
 import com.project.common.dto.ChatMessage;
 import com.project.common.dto.ChatRequest;
+import com.project.common.dto.TogetherAIResponse;
 import com.project.readingservice.CRUDReadingService;
 import com.project.readingservice.internal.util.TogetherAIClient;
 import com.project.readingservice.internal.util.UserService;
@@ -60,15 +61,17 @@ public class ReadingSuggestionServiceImpl implements SuggestionService {
                 
                 Present the evaluation in a clear, friendly, and motivational tone to encourage the user to keep learning and improving.
                 """;
-        List<ChatMessage> messages = List.of(new ChatMessage(prompt, constructContent()));
-        ChatRequest request = new ChatRequest(model, messages, true);
-        String response = client.chatCompletion(request);
+        List<ChatMessage> messages = List.of(
+                new ChatMessage("system", prompt),
+                new ChatMessage("user", constructContent()));
+        ChatRequest request = new ChatRequest(model, messages, false);
+        TogetherAIResponse response = client.chatCompletion(request);
 
-        if (response != null && !response.isBlank()) {
+        if (response != null) {
             aiSuggestionRepository.save(AiSuggestion.builder()
                     .userId(userService.getUserId())
                     .createdAt(new Date())
-                    .suggestion(response)
+                    .suggestion(response.getChoices().getFirst().getMessage().getContent())
                     .build());
         }
     }

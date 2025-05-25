@@ -1,6 +1,7 @@
-package com.project.listeningservice;
+package com.project.listeningservice.controller;
 
 import com.project.common.dto.BasicExamDTO;
+import com.project.listeningservice.CrudListeningService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
