@@ -1,11 +1,13 @@
 package com.project.common;
 
 import com.project.common.dto.BasicExamDTO;
+import org.springframework.scheduling.annotation.Async;
 
 import java.util.List;
 
 public interface SuggestionService {
 
+    @Async
     void generateNewRecommendation();
 
     String getPersonalRecommendation();

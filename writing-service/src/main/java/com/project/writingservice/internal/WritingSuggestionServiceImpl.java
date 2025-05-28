@@ -16,6 +16,7 @@ import com.project.writingservice.internal.entity.user.AiSuggestionRepository;
 import com.project.writingservice.internal.entity.user.UserWritingRecordRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -41,6 +42,7 @@ public class WritingSuggestionServiceImpl implements SuggestionService {
     final TogetherAIClient client;
 
     @Override
+    @Async
     public void generateNewRecommendation() {
         String model = "meta-llama/Llama-3.3-70B-Instruct-Turbo-Free";
         String prompt = """
