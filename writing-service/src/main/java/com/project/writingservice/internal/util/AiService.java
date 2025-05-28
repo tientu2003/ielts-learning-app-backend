@@ -39,7 +39,6 @@ public class AiService {
                 userWritingRecordRepository.save(userWritingRecord);
             });
             suggestionService.generateNewRecommendation();
-            log.info("Response AI: {}", response);
         } catch (HttpServerErrorException e) {
             if (e.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR) {
                 log.error("AI Scoring Process Failed with 500: {}", e.getResponseBodyAsString());
