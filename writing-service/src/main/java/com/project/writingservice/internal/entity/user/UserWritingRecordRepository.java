@@ -29,6 +29,7 @@ public interface UserWritingRecordRepository extends MongoRepository<MongoUserWr
 
     @Aggregation(pipeline = {
             "{ $match: { userId: ?0, topic: ?1 } }",
+            "{ $match: { 'score': { $exists: true } } }",
             "{ $project: { 'score': 1 } }",
             "{ $replaceRoot: { newRoot: '$score' } }"
     })

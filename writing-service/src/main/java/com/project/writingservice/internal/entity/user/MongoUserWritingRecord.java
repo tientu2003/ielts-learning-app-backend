@@ -45,6 +45,18 @@ public class  MongoUserWritingRecord {
     }
 
     public DetailRecord toDetailRecord(WritingExam writingExam) {
+
+        if (score == null || score.getFinalScore() == null) {
+            return DetailRecord.builder()
+                    .context(writingExam.getContext())
+                    .diagram_url(writingExam.getDiagram_url())
+                    .task(writingExam.getTask())
+                    .name(writingExam.getName())
+                    .duration(this.duration)
+                    .userAnswer(this.answer)
+                    .build();
+        }
+
         return DetailRecord.builder()
                 .context(writingExam.getContext())
                 .diagram_url(writingExam.getDiagram_url())
