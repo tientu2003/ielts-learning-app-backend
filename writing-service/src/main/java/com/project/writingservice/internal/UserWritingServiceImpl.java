@@ -82,6 +82,7 @@ public class UserWritingServiceImpl implements UserWritingService {
                 .averageScore(userWritingRecordRepository.getAverageFinalScoreByUserId(userId))
                 .nextTestId(exam.getId())
                 .testName(exam.getTestName())
+                .testTopics(exam.getTopics() == null ? List.of() : exam.getTopics())
                 .topics(languageProficiencyService.getAllTopicsByUserId())
                 .personalRecommendation(suggestionService.getPersonalRecommendation())
                 .skillLanguageProficiency(languageProficiencyService.getSkillProficiencyDTO())

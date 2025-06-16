@@ -81,6 +81,7 @@ public class UserReadingServiceImp implements UserReadingService {
             .averageScore(averageScore)
             .nextTestId(exam.getId())
             .testName(exam.getTestName())
+            .testTopics(exam.getTopics() == null ? List.of() : exam.getTopics())
             .topics(languageProficiencyService.getAllTopicsByUserId())
             .personalRecommendation(suggestionService.getPersonalRecommendation())
             .skillLanguageProficiency(languageProficiencyService.getSkillProficiencyDTO())

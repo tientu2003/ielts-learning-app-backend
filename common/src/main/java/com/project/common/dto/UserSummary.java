@@ -19,6 +19,8 @@ public class UserSummary {
 
     private String testName;
 
+    private List<String> testTopics;
+
     private List<String> topics;
 
     private LanguageProficiencyDTO skillLanguageProficiency;
